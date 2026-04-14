@@ -1,0 +1,22 @@
+:root {
+  --color-text: #1f1b3a;
+  --color-subtext: #6b6494;
+  --color-border: #e8d6ff;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  color: var(--color-text);
+}
