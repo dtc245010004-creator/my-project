@@ -1,0 +1,1919 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recruiter Dashboard - Job Portal Platform</title>
+  <link rel="icon" type="image/jpeg" href="../assets/images/logo1.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    /* ============================================
+       1) THEME + RESET
+    ============================================ */
+    :root {
+      --bg-main: #f4f7fe;
+      --bg-card: #ffffff;
+      --line: #e6eaf2;
+      --text: #0f172a;
+      --sub: #64748b;
+
+      --sidebar-bg: #111827;
+      --sidebar-bg-soft: #1f2937;
+      --sidebar-text: #e5e7eb;
+
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --green: #10b981;
+      --orange: #f59e0b;
+      --red: #ef4444;
+
+      --badge-open-bg: #e0edff;
+      --badge-open-text: #1d4ed8;
+      --badge-close-bg: #eceff4;
+      --badge-close-text: #475569;
+      --badge-expired-bg: #ffe6e6;
+      --badge-expired-text: #b91c1c;
+
+      --radius: 12px;
+      --shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+      --shadow-hover: 0 14px 30px rgba(15, 23, 42, 0.12);
+      --sidebar-width: 270px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Inter", Arial, sans-serif;
+      background: var(--bg-main);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font-family: inherit;
+    }
+
+    .dashboard {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: var(--sidebar-width) 1fr;
+    }
+
+    /* ============================================
+       2) SIDEBAR
+    ============================================ */
+    .sidebar {
+      background: linear-gradient(180deg, var(--sidebar-bg) 0%, #0b1222 100%);
+      color: var(--sidebar-text);
+      padding: 18px 14px;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .brand {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      padding: 14px;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand img {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+
+    .company-block {
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius);
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .company-logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      color: #1e3a8a;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .company-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .company-sub {
+      font-size: 12px;
+      color: #cbd5e1;
+      margin-top: 3px;
+    }
+
+    .menu {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: #dbe3f1;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 11px 12px;
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateX(2px);
+    }
+
+    /* ============================================
+       3) MAIN AREA
+    ============================================ */
+    .main {
+      padding: 18px;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 14px;
+    }
+
+    .topbar {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .topbar h1 {
+      font-size: 25px;
+      margin-bottom: 4px;
+      color: #12203f;
+    }
+
+    .topbar p {
+      color: var(--sub);
+      font-size: 14px;
+    }
+
+    .top-search {
+      margin-top: 10px;
+      position: relative;
+      max-width: 380px;
+    }
+
+    .top-search input {
+      width: 100%;
+      border: 1px solid #cfd8e8;
+      border-radius: 10px;
+      padding: 9px 34px 9px 10px;
+      font-size: 13px;
+      outline: none;
+      background: #fff;
+    }
+
+    .top-search i {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      color: #7b8aa5;
+      font-size: 12px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: filter 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      filter: brightness(0.95);
+    }
+
+    .btn-post {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-logout {
+      background: #f59e0b;
+      color: #fff;
+    }
+
+    /* ============================================
+       4) STATS CARDS
+    ============================================ */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      color: #1e3a8a;
+      background: #eff4ff;
+      border: 1px solid #d7e4ff;
+    }
+
+    .stat-title {
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f274f;
+      line-height: 1;
+    }
+
+    /* ============================================
+       5) CORE GRID: TABLE + ACTIVITY
+    ============================================ */
+    .core-grid {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .applicants-section {
+      display: none;
+    }
+
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .panel h2 {
+      font-size: 18px;
+      color: #12305f;
+      margin-bottom: 10px;
+    }
+
+    /* Table */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid #e4ebf6;
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 860px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 11px 10px;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 13px;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #f8faff;
+      color: #4b5d78;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    tbody tr {
+      transition: background 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background: #f8fbff;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border: 1px solid transparent;
+    }
+
+    .badge.open {
+      color: var(--badge-open-text);
+      background: var(--badge-open-bg);
+      border-color: #cfe0ff;
+    }
+
+    .badge.closed {
+      color: var(--badge-close-text);
+      background: var(--badge-close-bg);
+      border-color: #d9e0ea;
+    }
+
+    .badge.expired {
+      color: var(--badge-expired-text);
+      background: var(--badge-expired-bg);
+      border-color: #ffd0d0;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-xs {
+      border-radius: 8px;
+      border: 1px solid #c5d2ea;
+      background: #fff;
+      color: #1f3563;
+      padding: 6px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-xs:hover {
+      background: #f3f7ff;
+    }
+
+    .btn-toggle {
+      border-color: #bdd0f5;
+      background: #eef4ff;
+    }
+
+    .btn-view {
+      border-color: #8fd6bf;
+      background: #ecfdf4;
+      color: #14532d;
+    }
+
+    .settings-note {
+      border: 1px solid #cfe0ff;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    /* Activity */
+    .activity-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .activity-item {
+      border: 1px solid #e4ecf8;
+      border-radius: 10px;
+      padding: 10px;
+      background: #fff;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .activity-item:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+
+    .activity-name {
+      font-weight: 700;
+      color: #1d3767;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+
+    .activity-sub {
+      font-size: 12px;
+      color: var(--sub);
+      line-height: 1.4;
+    }
+
+    /* Applicant Management Section */
+    .applicant-panel {
+      margin-top: 12px;
+      border: 1px solid #e4ebf6;
+      border-radius: 10px;
+      padding: 12px;
+      background: #fafcff;
+      display: none;
+    }
+
+    .applicant-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+
+    .applicant-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .applicant-job-select {
+      border: 1px solid #cfd8e8;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 13px;
+      background: #fff;
+      color: #1f3563;
+      min-width: 220px;
+      outline: none;
+    }
+
+    .applicant-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #1f3563;
+    }
+
+    .search-box {
+      position: relative;
+      min-width: 220px;
+    }
+
+    .search-box input {
+      width: 100%;
+      border: 1px solid #cfd8e8;
+      border-radius: 10px;
+      padding: 9px 34px 9px 10px;
+      font-size: 13px;
+      outline: none;
+      background: #fff;
+    }
+
+    .search-box i {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      color: #7b8aa5;
+      font-size: 12px;
+    }
+
+    .applicant-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .settings-tile {
+      border: 1px solid #dbe4f2;
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px;
+      display: grid;
+      gap: 3px;
+    }
+
+    .settings-tile-label {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .settings-tile-value {
+      font-size: 15px;
+      color: #0f274f;
+      font-weight: 700;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .settings-actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .applicant-row {
+      border: 1px solid #dfe7f5;
+      border-radius: 10px;
+      padding: 10px;
+      background: #fff;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .applicant-meta {
+      font-size: 12px;
+      color: var(--sub);
+      margin-top: 3px;
+    }
+
+    .applicant-meta i {
+      width: 14px;
+      margin-right: 6px;
+      color: #64748b;
+    }
+
+    .app-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .app-status.pending {
+      color: #9a3412;
+      background: #fff7ed;
+      border-color: #fed7aa;
+    }
+
+    .app-status.approved {
+      color: #166534;
+      background: #ecfdf5;
+      border-color: #a7f3d0;
+    }
+
+    .app-status.interview {
+      color: #1d4ed8;
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+
+    .app-status.other {
+      color: #334155;
+      background: #f8fafc;
+      border-color: #e2e8f0;
+    }
+
+    .applicant-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-delete-app {
+      border-color: #fecaca;
+      color: #b91c1c;
+      background: #fef2f2;
+    }
+
+    .empty-note {
+      border: 1px dashed #cfd8e8;
+      border-radius: 10px;
+      padding: 14px;
+      color: var(--sub);
+      font-size: 13px;
+      text-align: center;
+      background: #fff;
+    }
+
+    /* Trend chart mock */
+    .trend {
+      margin-top: 12px;
+    }
+
+    .trend h3 {
+      font-size: 14px;
+      color: #1d3767;
+      margin-bottom: 8px;
+    }
+
+    .bars {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      align-items: end;
+      height: 120px;
+      padding: 10px;
+      border: 1px solid #e4ecf8;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .bar-col {
+      display: grid;
+      justify-items: center;
+      gap: 6px;
+      align-items: end;
+    }
+
+    .bar {
+      width: 20px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #60a5fa, #2563eb);
+    }
+
+    .bar-label {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    /* ============================================
+       6) MODALS
+    ============================================ */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      z-index: 50;
+    }
+
+    .modal {
+      width: min(620px, 100%);
+      border: 1px solid #e4ebf6;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 24px 40px rgba(2, 6, 23, 0.24);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid #e8eef9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-head h3 {
+      font-size: 17px;
+      color: #16315f;
+    }
+
+    .modal-close {
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: #f1f5ff;
+      cursor: pointer;
+      font-size: 16px;
+      color: #21408a;
+    }
+
+    .modal-body {
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      font-size: 13px;
+      color: #4c5f7e;
+      font-weight: 600;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      border: 1px solid #cdd8ea;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .field textarea {
+      min-height: 94px;
+      resize: vertical;
+    }
+
+    .modal-actions {
+      padding: 0 14px 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .btn-cancel {
+      border: 1px solid #c8d4ea;
+      border-radius: 10px;
+      background: #fff;
+      color: #1f3563;
+      padding: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-save {
+      border: 1px solid var(--green);
+      border-radius: 10px;
+      background: var(--green);
+      color: #fff;
+      padding: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .wallet-balance-card {
+      border: 1px solid #bbf7d0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+      color: #065f46;
+      padding: 12px 14px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .wallet-balance-card small {
+      font-size: 12px;
+      color: #047857;
+      font-weight: 700;
+    }
+
+    .wallet-balance-card strong {
+      font-size: 22px;
+      line-height: 1.1;
+      color: #065f46;
+      letter-spacing: 0.2px;
+    }
+
+    .wallet-step {
+      display: grid;
+      gap: 10px;
+      animation: walletFadeIn 0.2s ease;
+    }
+
+    .wallet-step.hidden {
+      display: none;
+    }
+
+    .wallet-primary-btn {
+      width: 100%;
+      border: 1px solid #16a34a;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: #fff;
+      padding: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1px;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(22, 163, 74, 0.24);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    }
+
+    .wallet-primary-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 24px rgba(22, 163, 74, 0.28);
+      filter: brightness(1.03);
+    }
+
+    .wallet-primary-btn:disabled {
+      cursor: not-allowed;
+      filter: grayscale(0.2);
+      box-shadow: none;
+      opacity: 0.6;
+      transform: none;
+    }
+
+    .wallet-qr-shell {
+      border: 1px solid #dbe7f8;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      padding: 12px;
+      display: grid;
+      justify-items: center;
+      gap: 8px;
+    }
+
+    .wallet-qr-info {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #f8fafc;
+      padding: 8px;
+      display: grid;
+      gap: 7px;
+    }
+
+    .wallet-copy-row {
+      border: 1px solid #dbe3ee;
+      border-radius: 10px;
+      padding: 7px 8px;
+      background: #fff;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .wallet-copy-row .meta {
+      display: grid;
+      gap: 2px;
+    }
+
+    .wallet-copy-row .meta small {
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 700;
+    }
+
+    .wallet-copy-row .meta strong {
+      font-size: 13px;
+      color: #0f172a;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .wallet-copy-btn {
+      border: 1px solid #c7d2fe;
+      border-radius: 9px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 9px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .wallet-copy-btn:hover {
+      background: #e0e7ff;
+    }
+
+    .wallet-copy-toast {
+      min-height: 18px;
+      font-size: 12px;
+      color: #16a34a;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .wallet-transfer-shell {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 8px;
+      background: #262f39;
+      border: 1px solid #5b6f80;
+      border-radius: 10px;
+      padding: 8px;
+    }
+
+    .wallet-transfer-col {
+      border: 1px solid #587082;
+      border-radius: 4px;
+      background: #313943;
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .wallet-transfer-col h4 {
+      font-size: 13px;
+      color: #9fb9cd;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .wallet-transfer-item {
+      display: grid;
+      gap: 4px;
+    }
+
+    .wallet-transfer-item span {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .wallet-transfer-item strong {
+      color: #ff2f2f;
+      font-size: 30px;
+      line-height: 1.2;
+      font-weight: 800;
+      word-break: break-word;
+      text-transform: uppercase;
+    }
+
+    .wallet-transfer-item strong#qrAmountValue {
+      text-transform: none;
+    }
+
+    .wallet-qr-shell-dark {
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+      padding: 0;
+      justify-items: start;
+    }
+
+    .wallet-timer-box {
+      display: grid;
+      gap: 4px;
+      width: 100%;
+      max-width: 224px;
+    }
+
+    .wallet-timer-box span {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .wallet-timer-box strong {
+      display: grid;
+      place-items: center;
+      background: #22282f;
+      border-radius: 4px;
+      border: 1px solid #22282f;
+      color: #fef3c7;
+      letter-spacing: 1px;
+      font-size: 36px;
+      line-height: 1;
+      padding: 10px 8px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .wallet-instruction-list {
+      background: #1f2630;
+      border: 1px solid #52677b;
+      border-radius: 8px;
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .wallet-instruction-list p {
+      margin: 0;
+      color: #4ade80;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 900px) {
+      .wallet-transfer-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .settings-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .wallet-transfer-item strong {
+        font-size: 24px;
+      }
+
+      .wallet-timer-box strong {
+        font-size: 30px;
+      }
+    }
+
+    @keyframes walletFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+
+    /* ============================================
+       7) RESPONSIVE
+    ============================================ */
+    @media (max-width: 1280px) {
+      .stats-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .core-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+      }
+
+      .menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .menu {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr;
+      }
+
+      .applicant-head {
+        grid-template-columns: 1fr;
+      }
+
+      .applicant-controls {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .applicant-job-select {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .search-box {
+        min-width: 0;
+      }
+
+      .applicant-row {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+
+    /* ============================================
+       UNIFIED STYLE OVERRIDE
+    ============================================ */
+    :root {
+      --bg-main: #f3e8ff;
+      --bg-card: rgba(255, 255, 255, 0.84);
+      --line: #eadbff;
+      --primary: #ec4899;
+      --shadow: 0 12px 26px rgba(76, 29, 149, 0.14);
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 8% 0%, rgba(244, 114, 182, 0.38) 0%, transparent 34%),
+        radial-gradient(circle at 96% 18%, rgba(99, 102, 241, 0.34) 0%, transparent 30%),
+        linear-gradient(140deg, #d946ef 0%, #7c3aed 48%, #4f46e5 100%);
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, rgba(30, 27, 75, 0.96) 0%, rgba(76, 29, 149, 0.96) 100%);
+      border-right: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(6px);
+    }
+
+    .brand, .company-block, .menu a {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .menu a:hover, .menu a.active {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .topbar, .kpi, .panel, .card, .job-card {
+      background: var(--bg-card);
+      border-color: var(--line);
+      backdrop-filter: blur(4px);
+    }
+
+    .btn, .btn-primary, .btn-main, .btn-submit, .btn-post, .btn-logout {
+      border: none;
+      background: linear-gradient(135deg, #ec4899, #6366f1);
+      color: #fff;
+    }
+
+    .btn:hover, .btn-primary:hover, .btn-main:hover, .btn-submit:hover, .btn-post:hover, .btn-logout:hover {
+      filter: brightness(1.04);
+    }
+
+    input, textarea, select, .top-search input {
+      border-color: #e9d5ff;
+    }
+
+    .support-widget {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 120;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    .support-list {
+      display: grid;
+      gap: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px) scale(0.98);
+      transform-origin: bottom right;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .support-widget.open .support-list {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    .support-item {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .support-label {
+      text-decoration: none;
+      color: #fff;
+      border-radius: 12px;
+      min-width: 146px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.23);
+      backdrop-filter: blur(4px);
+    }
+
+    .support-label--teal { background: linear-gradient(135deg, #0284c7, #0ea5e9); }
+    .support-label--blue { background: linear-gradient(135deg, #1d4ed8, #2563eb); }
+    .support-label--indigo { background: linear-gradient(135deg, #0b61f3, #1d72ff); }
+
+    .support-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      border: 2px solid rgba(255, 255, 255, 0.34);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 800;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.24);
+      transition: transform 0.18s ease, filter 0.18s ease;
+    }
+
+    .support-icon:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+
+    .support-icon--teal { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+    .support-icon--blue { background: linear-gradient(135deg, #4c72c9, #4168be); }
+    .support-icon--indigo { background: linear-gradient(135deg, #0b61f3, #1d72ff); }
+
+    .support-toggle {
+      width: 74px;
+      height: 74px;
+      border-radius: 999px;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      box-shadow: 0 12px 22px rgba(136, 19, 55, 0.34);
+      color: #fff;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      padding: 0;
+      line-height: 1;
+      font-size: 36px;
+    }
+
+    .support-avatar {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      border-radius: 999px;
+      filter: saturate(0.95) contrast(1.05) brightness(0.88);
+    }
+
+    .support-widget .support-close {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .support-widget.open .support-open { display: none; }
+    .support-widget.open .support-close { display: inline-flex; }
+
+    .support-fab-label {
+      position: absolute;
+      right: 84px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      color: #fff;
+      border-radius: 11px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 8px 12px;
+      white-space: nowrap;
+      box-shadow: 0 8px 16px rgba(190, 24, 93, 0.35);
+    }
+
+    .support-widget.open .support-fab-label { display: none; }
+
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <!-- ============================================
+         Sidebar Navigation
+    ============================================ -->
+    <aside class="sidebar">
+      <div class="brand"><img src="../assets/images/logo1.jpg" alt="Job Portal logo"><span>Job Portal Platform</span></div>
+
+      <div class="company-block">
+        <div class="company-logo">TC</div>
+        <div>
+          <div class="company-name">Tech Corp Recruitment</div>
+          <div class="company-sub">Recruiter Workspace</div>
+        </div>
+      </div>
+
+      <ul class="menu">
+        <li><a href="#" class="active" data-view="overview"><i class="fa-solid fa-chart-line"></i><span>Tổng quan</span></a></li>
+        <li><a href="#" data-view="jobs"><i class="fa-solid fa-briefcase"></i><span>Quản lý tin tuyển dụng</span></a></li>
+        <li><a href="#" data-view="applicants"><i class="fa-solid fa-users"></i><span>Quản lý hồ sơ ứng viên</span></a></li>
+        <li><a href="#" data-view="interviews"><i class="fa-regular fa-calendar-check"></i><span>Lịch hẹn phỏng vấn</span></a></li>
+        <li><a href="#" data-view="policy"><i class="fa-solid fa-file-invoice-dollar"></i><span>Chính sách phí</span></a></li>
+        <li><a href="#" data-view="settings"><i class="fa-solid fa-gear"></i><span>Cài đặt tài khoản</span></a></li>
+      </ul>
+    </aside>
+
+    <!-- ============================================
+         Main Content
+    ============================================ -->
+    <main class="main">
+      <!-- Header -->
+      <section class="topbar">
+        <div>
+          <h1>Tech Corp Dashboard</h1>
+          <p>Quản lý tin tuyển dụng, hồ sơ ứng viên và lịch phỏng vấn trong cùng một màn hình.</p>
+          <div id="topSearchWrap" class="top-search">
+            <input id="topSearchInput" type="text" placeholder="Tìm theo tên tin, tên ứng viên, email..." />
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button id="btnOpenWallet" class="btn btn-post" type="button"><i class="fa-solid fa-wallet"></i> Nạp tiền</button>
+          <button id="btnOpenCreate" class="btn btn-post" type="button"><i class="fa-solid fa-plus"></i> Đăng Job mới</button>
+          <button id="btnLogout" class="btn btn-logout" type="button"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
+        </div>
+      </section>
+
+      <!-- Stats -->
+      <section class="stats-row">
+        <article class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-bullhorn"></i></div>
+          <div>
+            <div class="stat-title">Jobs đang đăng</div>
+            <div id="statOpenPosts" class="stat-value">0</div>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-file-lines"></i></div>
+          <div>
+            <div class="stat-title">Tổng hồ sơ nhận được</div>
+            <div id="statTotalApplicants" class="stat-value">0</div>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-icon"><i class="fa-regular fa-eye"></i></div>
+          <div>
+            <div class="stat-title">Hồ sơ mới chưa xem</div>
+            <div id="statUnread" class="stat-value">0</div>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-icon"><i class="fa-regular fa-calendar"></i></div>
+          <div>
+            <div class="stat-title">Lịch phỏng vấn hôm nay</div>
+            <div id="statInterviewToday" class="stat-value">0</div>
+          </div>
+        </article>
+      </section>
+
+      <!-- Core -->
+      <section id="jobsSection" class="core-grid">
+        <!-- ============================================
+             UC-3.2.1 Quan ly tin tuyen dung (Table)
+        ============================================ -->
+        <article class="panel">
+          <h2>Quản lý tin tuyển dụng</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tên tin</th>
+                  <th>Ngày đăng</th>
+                  <th>Số lượng hồ sơ</th>
+                  <th>Lượt xem</th>
+                  <th>Trạng thái</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="jobTableBody"></tbody>
+            </table>
+          </div>
+
+        </article>
+
+        <!-- ============================================
+             Recent activities + trend
+        ============================================ -->
+        <article class="panel">
+          <h2>Ứng viên nộp gần đây</h2>
+          <ul id="recentActivityList" class="activity-list"></ul>
+
+          <div class="trend">
+            <h3>Xu hướng ứng tuyển trong tuần</h3>
+            <div id="trendBars" class="bars"></div>
+          </div>
+        </article>
+      </section>
+
+      <section id="applicantsSection" class="applicants-section">
+        <article class="panel">
+          <h2>Quản lý hồ sơ ứng viên</h2>
+          <section id="applicantPanel" class="applicant-panel" style="display:block; margin-top:0;">
+            <div class="applicant-head">
+              <div id="applicantTitle" class="applicant-title">Danh sách ứng viên</div>
+              <div class="applicant-controls">
+                <select id="applicantJobSelect" class="applicant-job-select"></select>
+                <select id="applicantStatusFilter" class="applicant-job-select">
+                  <option value="all">Tất cả trạng thái</option>
+                  <option value="pending">Chờ duyệt</option>
+                  <option value="approved">Đã duyệt</option>
+                  <option value="moi phong van">Mới phỏng vấn</option>
+                </select>
+                <select id="applicantTimeFilter" class="applicant-job-select">
+                  <option value="all">Tất cả thời gian</option>
+                  <option value="today">Hôm nay</option>
+                  <option value="7d">7 ngày</option>
+                  <option value="30d">30 ngày</option>
+                </select>
+                <div class="search-box">
+                  <input id="applicantSearch" type="text" placeholder="Tim ten, email, ky nang, CV..." />
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+              </div>
+            </div>
+
+            <div id="applicantList" class="applicant-list"></div>
+          </section>
+        </article>
+      </section>
+
+      <section id="interviewsSection" class="applicants-section">
+        <article class="panel">
+          <h2>Lịch hẹn phỏng vấn</h2>
+          <section class="applicant-panel" style="display:block; margin-top:0;">
+            <div class="applicant-head">
+              <div class="applicant-title">Danh sách lịch phỏng vấn</div>
+              <div class="applicant-controls">
+                <select id="interviewJobFilter" class="applicant-job-select">
+                  <option value="all">Tất cả tin đăng</option>
+                </select>
+                <select id="interviewStatusFilter" class="applicant-job-select">
+                  <option value="all">Tất cả trạng thái</option>
+                  <option value="scheduled">Đã hẹn</option>
+                  <option value="done">Đã xong</option>
+                  <option value="canceled">Đã hủy</option>
+                </select>
+                <select id="interviewDateFilter" class="applicant-job-select">
+                  <option value="all">Tất cả thời gian</option>
+                  <option value="today">Hôm nay</option>
+                  <option value="7d">7 ngày</option>
+                  <option value="30d">30 ngày</option>
+                </select>
+                <div class="search-box">
+                  <input id="interviewSearch" type="text" placeholder="Tìm ứng viên, vị trí, địa điểm..." />
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+              </div>
+            </div>
+
+            <div id="interviewList" class="applicant-list"></div>
+          </section>
+        </article>
+      </section>
+
+      <section id="policySection" class="applicants-section">
+        <article class="panel">
+          <h2>Chính sách phí tuyển dụng</h2>
+          <div class="settings-note" style="margin-bottom:10px;">
+            Phí được áp dụng theo 2 phần: phí ghim tin và phí hoa hồng theo số lượng hồ sơ đã được recruiter duyệt.
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
+            <div style="border:1px solid #dbeafe;border-radius:10px;background:#eff6ff;padding:10px;">
+              <div style="font-size:12px;color:#1e40af;font-weight:700;">Phí ghim 1 tin</div>
+              <div id="policyFeaturedFee" style="font-size:22px;font-weight:800;color:#1d4ed8;line-height:1.1;">0đ</div>
+            </div>
+            <div style="border:1px solid #dcfce7;border-radius:10px;background:#f0fdf4;padding:10px;">
+              <div style="font-size:12px;color:#166534;font-weight:700;">Hoa hồng mỗi hồ sơ duyệt</div>
+              <div id="policyCommissionPerApproved" style="font-size:22px;font-weight:800;color:#15803d;line-height:1.1;">0đ</div>
+            </div>
+            <div style="border:1px solid #fce7f3;border-radius:10px;background:#fdf2f8;padding:10px;">
+              <div style="font-size:12px;color:#9d174d;font-weight:700;">Số hồ sơ đã duyệt</div>
+              <div id="policyApprovedCount" style="font-size:22px;font-weight:800;color:#be185d;line-height:1.1;">0</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px;">
+            <div style="border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px;">
+              <div style="font-size:12px;color:#475569;font-weight:700;">Tổng hoa hồng ước tính (đã duyệt)</div>
+              <div id="policyEstimatedCommission" style="font-size:20px;font-weight:800;color:#0f172a;line-height:1.1;">0đ</div>
+            </div>
+            <div style="border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px;">
+              <div style="font-size:12px;color:#475569;font-weight:700;">Tổng phí ghim ước tính</div>
+              <div id="policyEstimatedFeatured" style="font-size:20px;font-weight:800;color:#0f172a;line-height:1.1;">0đ</div>
+            </div>
+          </div>
+
+          <div style="border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px;margin-top:10px;">
+            <div style="font-size:12px;color:#475569;font-weight:700;margin-bottom:8px;">Tổng chi phí dự kiến</div>
+            <div id="policyEstimatedTotal" style="font-size:24px;font-weight:800;color:#111827;line-height:1.1;">0đ</div>
+          </div>
+
+          <div class="field" style="margin-top:10px;">
+            <label>Theo từng tin tuyển dụng</label>
+            <div id="policyByJobList" style="border:1px solid #e5e7eb;border-radius:10px;background:#fff;max-height:220px;overflow:auto;padding:8px;display:grid;gap:6px;color:#475569;font-size:12px;"></div>
+          </div>
+
+          <div style="border-top:1px dashed #dbe3f2;margin-top:14px;padding-top:14px;display:grid;gap:10px;">
+            <div class="settings-note" style="background:#fefce8;border-color:#fde68a;color:#854d0e;">Gửi liên hệ cho admin nếu bạn cần hỗ trợ thanh toán, xử lý tin đăng hoặc phản ánh sự cố hệ thống.</div>
+            <div class="field">
+              <label for="recruiterContactTitle">Tiêu đề liên hệ</label>
+              <input id="recruiterContactTitle" type="text" placeholder="Ví dụ: Cần hỗ trợ duyệt nạp tiền" />
+            </div>
+            <div class="field">
+              <label for="recruiterContactContent">Nội dung</label>
+              <textarea id="recruiterContactContent" placeholder="Mô tả chi tiết vấn đề bạn cần admin xử lý..."></textarea>
+            </div>
+            <button id="recruiterContactSend" class="btn btn-save" type="button" style="justify-self:start;">Gửi liên hệ</button>
+          </div>
+        </article>
+      </section>
+
+      <section id="settingsSection" class="applicants-section">
+        <article class="panel">
+          <h2>Cài đặt tài khoản</h2>
+          <div class="settings-note" style="margin-bottom:10px;">
+            Quản lý thông tin recruiter và thao tác nhanh với ví, hồ sơ tài khoản ngay trong khu vực chức năng này.
+          </div>
+
+          <div class="settings-grid">
+            <div class="settings-tile">
+              <div class="settings-tile-label">Họ và tên</div>
+              <div id="settingsDisplayName" class="settings-tile-value">-</div>
+            </div>
+            <div class="settings-tile">
+              <div class="settings-tile-label">Công ty</div>
+              <div id="settingsDisplayCompany" class="settings-tile-value">-</div>
+            </div>
+            <div class="settings-tile">
+              <div class="settings-tile-label">Email đăng nhập</div>
+              <div id="settingsDisplayEmail" class="settings-tile-value">-</div>
+            </div>
+            <div class="settings-tile">
+              <div class="settings-tile-label">Số điện thoại</div>
+              <div id="settingsDisplayPhone" class="settings-tile-value">-</div>
+            </div>
+          </div>
+
+          <div class="settings-actions">
+            <button id="btnOpenAccountSettingsInline" class="btn btn-save" type="button"><i class="fa-solid fa-user-gear"></i> Chỉnh sửa thông tin</button>
+            <button id="btnOpenWalletInline" class="btn btn-post" type="button"><i class="fa-solid fa-wallet"></i> Mở ví / nạp tiền</button>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <!-- ============================================
+       Modal: Dang tin moi
+  ============================================ -->
+  <div id="createModalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="createModalTitle">
+      <div class="modal-head">
+        <h3 id="createModalTitle">Đăng tin tuyển dụng mới</h3>
+        <button id="createModalClose" class="modal-close" type="button">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="field">
+          <label for="newJobTitle">Tiêu đề tin</label>
+          <input id="newJobTitle" type="text" placeholder="Ví dụ: Lập trình viên Frontend Senior" />
+        </div>
+
+        <div class="field">
+          <label for="newJobSalary">Mức lương</label>
+          <input id="newJobSalary" type="text" placeholder="Ví dụ: 15 - 25 triệu VND hoặc thỏa thuận" />
+        </div>
+
+        <div class="field">
+          <label for="newJobDescription">Mô tả công việc</label>
+          <textarea id="newJobDescription" placeholder="Mô tả vai trò, kỹ năng và yêu cầu ứng viên..."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="newJobLocation">Địa điểm</label>
+          <input id="newJobLocation" type="text" placeholder="Ví dụ: Hà Nội / TP.HCM / Remote" />
+        </div>
+
+        <div class="field">
+          <label for="newJobRequirements">Yêu cầu</label>
+          <textarea id="newJobRequirements" placeholder="Ví dụ: 2+ năm kinh nghiệm, React, giao tiếp tốt..."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="newJobMaxApplicants">Số lượng hồ sơ nhận tối đa</label>
+          <input id="newJobMaxApplicants" type="number" min="1" step="1" placeholder="Ví dụ: 50 (để trống = không giới hạn)" />
+        </div>
+
+        <div class="field">
+          <label style="display:flex;align-items:center;gap:8px;">
+            <input id="newJobFeatured" type="checkbox" />
+            <span>Ghim/Nổi bật tin đăng (+20.000đ)</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="createModalCancel" class="btn-cancel" type="button">Hủy</button>
+        <button id="createModalSave" class="btn-save" type="button">Lưu tin</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       Modal: Gui loi moi phong van
+  ============================================ -->
+  <div id="inviteModalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="inviteModalTitle">
+      <div class="modal-head">
+        <h3 id="inviteModalTitle">Gửi lời mời phỏng vấn</h3>
+        <button id="inviteModalClose" class="modal-close" type="button">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="field">
+          <label for="inviteCandidate">Ứng viên</label>
+          <input id="inviteCandidate" type="text" readonly />
+        </div>
+
+        <div class="field">
+          <label for="inviteJob">Vị trí</label>
+          <input id="inviteJob" type="text" readonly />
+        </div>
+
+        <div class="field">
+          <label for="inviteDateTime">Thời gian phỏng vấn</label>
+          <input id="inviteDateTime" type="datetime-local" />
+        </div>
+
+        <div class="field">
+          <label for="inviteMessage">Ghi chú</label>
+          <textarea id="inviteMessage" placeholder="Nội dung nhắn gửi ứng viên..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="inviteModalCancel" class="btn-cancel" type="button">Hủy</button>
+        <button id="inviteModalSend" class="btn-save" type="button">Gửi lời mời</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="accountSettingsBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="accountSettingsTitle">
+      <div class="modal-head">
+        <h3 id="accountSettingsTitle">Cài đặt tài khoản</h3>
+        <button id="accountSettingsClose" class="modal-close" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="settings-note">
+          Cập nhật hồ sơ recruiter của bạn, bao gồm tên, công ty, email, số điện thoại và mật khẩu. Thay đổi sẽ được lưu ngay vào tài khoản đang đăng nhập.
+        </div>
+
+        <div class="field">
+          <label for="accountName">Họ và tên</label>
+          <input id="accountName" type="text" placeholder="Nhập họ và tên" />
+        </div>
+
+        <div class="field">
+          <label for="accountCompany">Công ty</label>
+          <input id="accountCompany" type="text" placeholder="Nhập tên công ty" />
+        </div>
+
+        <div class="field">
+          <label for="accountEmail">Email đăng nhập</label>
+          <input id="accountEmail" type="email" placeholder="name@company.com" />
+        </div>
+
+        <div class="field">
+          <label for="accountPhone">Số điện thoại</label>
+          <input id="accountPhone" type="tel" placeholder="Nhập số điện thoại" />
+        </div>
+
+        <div class="field">
+          <label for="accountCurrentPassword">Mật khẩu hiện tại</label>
+          <input id="accountCurrentPassword" type="password" placeholder="Nhập mật khẩu hiện tại" />
+        </div>
+
+        <div class="field">
+          <label for="accountNewPassword">Mật khẩu mới</label>
+          <input id="accountNewPassword" type="password" placeholder="Để trống nếu không đổi mật khẩu" />
+        </div>
+
+        <div class="field">
+          <label for="accountConfirmPassword">Xác nhận mật khẩu mới</label>
+          <input id="accountConfirmPassword" type="password" placeholder="Nhập lại mật khẩu mới" />
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="accountSettingsCancel" class="btn-cancel" type="button">Hủy</button>
+        <button id="accountSettingsSave" class="btn-save" type="button">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="walletModalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="walletModalTitle">
+      <div class="modal-head">
+        <h3 id="walletModalTitle">Thanh toán / Ví</h3>
+        <button id="walletModalClose" class="modal-close" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div id="walletStep1" class="wallet-step">
+          <div class="wallet-balance-card">
+            <small>Số dư hiện tại</small>
+            <strong id="walletBalanceText">0đ</strong>
+          </div>
+
+          <div class="field" style="margin-top:2px;">
+            <label for="depositAmount">Số tiền cần nạp</label>
+            <input id="depositAmount" type="text" inputmode="numeric" autocomplete="off" placeholder="Nhập số tiền (VD: 20.000đ)" />
+          </div>
+
+          <div class="settings-note" style="background:#ecfeff;border-color:#a5f3fc;color:#0f766e;">
+            Nội dung chuyển khoản sẽ được tạo tự động sau khi bấm Tạo mã thanh toán.
+          </div>
+
+          <button id="btnGenerateQr" class="wallet-primary-btn" type="button">Tạo mã thanh toán</button>
+        </div>
+
+        <div id="walletStep2" class="wallet-step hidden">
+          <div class="wallet-transfer-shell">
+            <div class="wallet-transfer-col">
+              <h4>Thông Tin Chuyển Khoản:</h4>
+
+              <div class="wallet-transfer-item">
+                <span>Ngân hàng:</span>
+                <strong id="qrBankValue">MB Bank</strong>
+              </div>
+
+              <div class="wallet-transfer-item">
+                <span>Tên TK:</span>
+                <strong id="qrAccountNameValue">Ngo Quang Tung</strong>
+              </div>
+
+              <div class="wallet-transfer-item">
+                <span>Số TK:</span>
+                <strong id="qrAccountNoValue">0346263706</strong>
+              </div>
+
+              <div class="wallet-transfer-item">
+                <span>Số Tiền Nạp:</span>
+                <strong id="qrAmountValue">0đ</strong>
+              </div>
+
+              <div class="wallet-transfer-item">
+                <span>Nội Dung Chuyển Khoản:</span>
+                <strong id="qrNoteValue">NAP VI</strong>
+              </div>
+            </div>
+
+            <div class="wallet-transfer-col">
+              <h4>Quét Nhanh Mã QR</h4>
+
+              <div class="wallet-qr-shell wallet-qr-shell-dark">
+                <img id="walletQrImage" src="" alt="QR thanh toán" style="width:220px;height:220px;border:2px solid #d1fae5;border-radius:2px;object-fit:cover;background:#f8fafc;" />
+
+                <div class="wallet-timer-box">
+                  <span>Thời Gian Hết Hạn:</span>
+                  <strong id="walletQrTimer">00:10:00</strong>
+                </div>
+              </div>
+              <div id="walletQrText" style="font-size:12px;color:#86efac;line-height:1.4;">Quét mã để mở app ngân hàng với nội dung chuyển khoản đã điền sẵn.</div>
+            </div>
+          </div>
+
+          <div class="wallet-instruction-list">
+            <p>Các Bạn Vui Lòng Ghi Đúng Nội Dung Chuyển Khoản.</p>
+            <p>Sau khi Chuyển Khoản Xong Hệ Thống Sẽ Tự Động Kiểm Tra Cập Nhật Số Dư Vào Tài Khoản.</p>
+            <p>Sau 10 Phút Nếu Không Thấy Cập Nhật Vui Lòng Chụp Bill Chuyển Khoản Và Gửi Cho ADMIN.</p>
+          </div>
+
+          <button id="btnCreateDeposit" class="wallet-primary-btn" type="button">Xác nhận đã chuyển khoản</button>
+        </div>
+
+        <div id="walletHistorySection" class="field" style="margin-top:4px;">
+          <label>Lịch sử giao dịch gần đây</label>
+          <div id="walletHistoryList" style="border:1px solid #e5e7eb;border-radius:10px;background:#fff;max-height:160px;overflow:auto;padding:8px;display:grid;gap:6px;color:#475569;font-size:12px;"></div>
+        </div>
+      </div>
+
+      <div id="walletFooterActions" class="modal-actions">
+        <button id="walletModalCancel" class="btn-cancel" type="button">Hủy</button>
+        <button id="walletModalSave" class="btn-save" type="button">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="support-widget" id="supportWidget">
+    <div class="support-list" id="supportList">
+      <div class="support-item">
+        <a class="support-label support-label--teal" href="https://t.me" target="_blank" rel="noopener noreferrer">Kênh Telegram</a>
+        <a class="support-icon support-icon--teal" href="https://t.me" target="_blank" rel="noopener noreferrer" aria-label="Telegram">&#128276;</a>
+      </div>
+      <div class="support-item">
+        <a class="support-label support-label--blue" href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">Facebook Page</a>
+        <a class="support-icon support-icon--blue" href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>
+      </div>
+      <div class="support-item">
+        <a class="support-label support-label--indigo" href="https://m.me" target="_blank" rel="noopener noreferrer">Chat Messenger</a>
+        <a class="support-icon support-icon--indigo" href="https://m.me" target="_blank" rel="noopener noreferrer" aria-label="Messenger">&#9993;</a>
+      </div>
+    </div>
+    <button class="support-toggle" id="supportToggle" type="button" aria-expanded="false" aria-controls="supportList" aria-label="Bật tắt hỗ trợ">
+      <span class="support-fab-label">Hỗ trợ</span>
+      <span class="support-open"><img class="support-avatar" src="../assets/images/soi-co-doc-xe-ao-meme-1.webp" alt="Avatar hỗ trợ"></span>
+      <span class="support-close">&#10005;</span>
+    </button>
+  </div>
+
+  <script>
+    (function setupSupportWidget() {
+      var widget = document.getElementById('supportWidget');
+      var toggle = document.getElementById('supportToggle');
+      if (!widget || !toggle) return;
+
+      toggle.addEventListener('click', function () {
+        var nextOpen = !widget.classList.contains('open');
+        widget.classList.toggle('open', nextOpen);
+        toggle.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+      });
+
+      document.addEventListener('click', function (event) {
+        if (!widget.classList.contains('open')) return;
+        if (widget.contains(event.target)) return;
+        widget.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    })();
+  </script>
+
+  <script src="../Data/data-init.js"></script>
+  <script src="../controllers/auth.js"></script>
+  <script src="../controllers/job.js"></script>
+  <script src="../controllers/recruiter.js"></script>
+</body>
+</html>

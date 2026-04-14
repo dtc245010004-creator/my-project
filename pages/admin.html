@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>System Admin Dashboard - Job Portal Platform</title>
+  <link rel="icon" type="image/jpeg" href="../assets/images/logo1.jpg">
+  <style>
+    /* ============================================
+       THEME TOKENS (CSS Variables)
+    ============================================ */
+    :root {
+      --bg: #f4f7fe;
+      --panel: #ffffff;
+      --line: #e5ebf6;
+      --text: #0f172a;
+      --sub: #64748b;
+
+      --sidebar-bg: #0f172a;
+      --sidebar-soft: #1e293b;
+      --sidebar-text: #dbe4f5;
+
+      --primary: #2563eb;
+      --primary-soft: #e9f0ff;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warn: #f59e0b;
+
+      --badge-pending-bg: #eaf1ff;
+      --badge-pending-text: #1d4ed8;
+      --badge-violation-bg: #ffebeb;
+      --badge-violation-text: #b91c1c;
+      --badge-locked-bg: #eef2f8;
+      --badge-locked-text: #475569;
+      --badge-active-bg: #e9f9f0;
+      --badge-active-text: #166534;
+
+      --radius: 12px;
+      --shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+      --shadow-hover: 0 14px 28px rgba(15, 23, 42, 0.12);
+      --sidebar-w: 270px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Inter, Roboto, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .layout {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+    }
+
+    /* ============================================
+       SIDEBAR (Dark)
+    ============================================ */
+    .sidebar {
+      background: linear-gradient(180deg, var(--sidebar-bg) 0%, #111827 100%);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--sidebar-text);
+      padding: 16px 12px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 14px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .brand {
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 12px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-avatar { 
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.28);
+      background: linear-gradient(145deg, #60a5fa, #2563eb);
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .brand-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand-meta {
+      min-width: 0;
+    }
+
+    .brand-name {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #fff;
+    }
+
+    .brand-role {
+      margin-top: 2px;
+      font-size: 12px;
+      color: #c7d4ea;
+    }
+
+    .menu {
+      list-style: none;
+      display: grid;
+      align-content: start;
+      gap: 8px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: var(--sidebar-text);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      padding: 11px 10px;
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.24);
+      transform: translateX(2px);
+    }
+
+    /* ============================================
+       MAIN WRAPPER
+    ============================================ */
+    .main {
+      padding: 16px;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr;
+      gap: 12px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .panel h2 {
+      font-size: 18px;
+      color: #1b3363;
+      margin-bottom: 10px;
+    }
+
+    .admin-view {
+      display: none;
+    }
+
+    /* ============================================
+       HEADER
+    ============================================ */
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search {
+      position: relative;
+      max-width: 480px;
+    }
+
+    .search input {
+      width: 100%;
+      border: 1px solid #ccd8ec;
+      border-radius: 10px;
+      padding: 10px 36px 10px 12px;
+      outline: none;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    .search .icon {
+      position: absolute;
+      right: 12px;
+      top: 10px;
+      color: #7a8ba9;
+      font-size: 13px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: filter 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      filter: brightness(0.95);
+    }
+
+    .btn-light {
+      background: #eef3ff;
+      color: #1d4ed8;
+      border: 1px solid #cfe0ff;
+    }
+
+    .btn-export {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-logout {
+      background: #120455;
+      color: #fff;
+    }
+
+    .btn.loading {
+      pointer-events: none;
+      opacity: 0.86;
+    }
+
+    .select-control {
+      border: 1px solid #ccd8ec;
+      border-radius: 10px;
+      background: #fff;
+      color: #1f3563;
+      padding: 9px 10px;
+      font-size: 13px;
+      min-width: 130px;
+      outline: none;
+    }
+
+    /* ============================================
+       KPI CARDS
+    ============================================ */
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .kpi {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      background: #fff;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .kpi-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      color: #1f3b77;
+      background: var(--primary-soft);
+      border: 1px solid #d6e4ff;
+    }
+
+    .kpi-title {
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .kpi-value {
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 800;
+      color: #102b58;
+    }
+
+    /* ============================================
+       FILTER BAR
+    ============================================ */
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .filter-btn {
+      border: 1px solid #cfdcf3;
+      background: #fff;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #36507d;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: #eef4ff;
+      border-color: #bdd4ff;
+      color: #1d4ed8;
+    }
+
+    /* ============================================
+       DATA TABLE + PAGINATION
+    ============================================ */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid #e4ebf6;
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table-wrap table {
+      min-width: 900px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid #edf2fa;
+      padding: 11px 10px;
+      text-align: left;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f8faff;
+      color: #4b5d78;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    tbody tr {
+      transition: background 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background: #f8fbff;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+    }
+
+    .badge.pending {
+      color: var(--badge-pending-text);
+      background: var(--badge-pending-bg);
+      border-color: #cadeff;
+    }
+
+    .badge.violation {
+      color: var(--badge-violation-text);
+      background: var(--badge-violation-bg);
+      border-color: #ffd2d2;
+    }
+
+    .badge.locked {
+      color: var(--badge-locked-text);
+      background: var(--badge-locked-bg);
+      border-color: #dbe2ee;
+    }
+
+    .badge.active {
+      color: var(--badge-active-text);
+      background: var(--badge-active-bg);
+      border-color: #c7efd6;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-xs {
+      border: 1px solid #c5d2ea;
+      background: #fff;
+      color: #1f3563;
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-xs:hover {
+      background: #f5f8ff;
+    }
+
+    .btn-approve {
+      border-color: #99e4bc;
+      background: #ecfff4;
+      color: #166534;
+    }
+
+    .btn-reject {
+      border-color: #fed7aa;
+      background: #fff7ed;
+      color: #c2410c;
+    }
+
+    .pagination {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .page-info {
+      font-size: 12px;
+      color: var(--sub);
+    }
+
+    .pager {
+      display: flex;
+      gap: 6px;
+    }
+
+    .pager button {
+      border: 1px solid #cdd8eb;
+      border-radius: 8px;
+      background: #fff;
+      color: #29457b;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .pager button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ============================================
+       LOWER GRID: CHART + USER MGMT + INDUSTRIES
+    ============================================ */
+    .lower-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 12px;
+      align-items: start;
+      margin-top: 12px;
+    }
+
+    .bars {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      align-items: end;
+      gap: 8px;
+      height: 170px;
+      border: 1px solid #e4ebf6;
+      border-radius: 10px;
+      padding: 10px;
+      background: #fbfdff;
+    }
+
+    .bar-col {
+      display: grid;
+      justify-items: center;
+      align-items: end;
+      gap: 6px;
+    }
+
+    .bar {
+      width: 20px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #60a5fa, #2563eb);
+    }
+
+    .bar-label {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .user-table-wrap {
+      overflow-x: auto;
+      border: 1px solid #e4ebf6;
+      border-radius: 10px;
+    }
+
+    .industry-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .industry-row input {
+      flex: 1;
+      min-width: 180px;
+      border: 1px solid #ccd8ec;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 14px;
+      outline: none;
+      background: #fff;
+    }
+
+    .industry-list {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      max-height: 220px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .industry-list li {
+      border: 1px solid #e4ebf6;
+      border-radius: 10px;
+      background: #fff;
+      padding: 9px 10px;
+      font-size: 13px;
+      color: #264173;
+    }
+
+    .settings-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .settings-card {
+      border: 1px solid #e4ebf6;
+      border-radius: 12px;
+      background: #f8fbff;
+      padding: 12px;
+    }
+
+    .settings-form {
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid #e4ebf6;
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px 12px;
+      color: #264173;
+      font-size: 13px;
+    }
+
+    .settings-row small {
+      display: block;
+      color: #64748b;
+      margin-top: 2px;
+      font-size: 12px;
+    }
+
+    .settings-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #2563eb;
+      flex-shrink: 0;
+    }
+
+    .settings-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .payment-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .summary-box {
+      border: 1px solid #e4ebf6;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+      padding: 12px;
+    }
+
+    .summary-box .label {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+
+    .summary-box .value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1e3a8a;
+    }
+
+    .payment-history {
+      margin-top: 12px;
+    }
+
+    .payment-split-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .payment-box {
+      border: 1px solid #e4ebf6;
+      border-radius: 12px;
+      background: #f8fbff;
+      padding: 10px;
+    }
+
+    .management-split-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+    }
+
+    #usersPanel {
+      grid-column: 1 / -1;
+      width: 100%;
+    }
+
+    .management-box {
+      border: 1px solid #e4ebf6;
+      border-radius: 12px;
+      background: #f8fbff;
+      padding: 10px;
+    }
+
+    .management-title {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: #22437a;
+      font-weight: 700;
+    }
+
+    .management-box table {
+      min-width: 100%;
+    }
+
+    .payment-history-title {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: #22437a;
+      font-weight: 700;
+    }
+
+    .settings-list {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .settings-list li {
+      border: 1px solid #e4ebf6;
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #264173;
+    }
+
+    .settings-table-title {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: #22437a;
+      font-weight: 700;
+    }
+
+    .table-toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+
+    .table-toolbar h2 {
+      margin: 0;
+    }
+
+    .sub-heading {
+      margin: 12px 0 8px;
+      font-size: 14px;
+      color: #22437a;
+      font-weight: 700;
+    }
+
+    .scope-btn {
+      border: 1px solid #cfdcf3;
+      background: #fff;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #36507d;
+      cursor: pointer;
+    }
+
+    .scope-btn.active,
+    .scope-btn:hover {
+      background: #eef4ff;
+      border-color: #bdd4ff;
+      color: #1d4ed8;
+    }
+
+    .summary-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .summary-item {
+      border: 1px solid #d9e6ff;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 10px;
+    }
+
+    .summary-item .label {
+      font-size: 12px;
+      color: #60708f;
+      margin-bottom: 3px;
+    }
+
+    .summary-item .value {
+      font-size: 18px;
+      font-weight: 800;
+      color: #16346a;
+    }
+
+    .status-chart {
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .status-row {
+      display: grid;
+      grid-template-columns: 90px 1fr 46px;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #4b5d78;
+    }
+
+    .status-track {
+      height: 10px;
+      border-radius: 999px;
+      background: #e8eefb;
+      overflow: hidden;
+    }
+
+    .status-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: #2563eb;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .contact-item {
+      border: 1px solid #e4ebf6;
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .contact-title {
+      font-weight: 700;
+      color: #19356a;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+
+    .contact-sub {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .policy-card {
+      border: 1px solid #dbe6fb;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .policy-card h3 {
+      color: #17366f;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .policy-card p {
+      color: #486089;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    /* ============================================
+       MODAL (Reject reason)
+       - UC-3.3.1 Tu choi tin vi pham
+    ============================================ */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 14px;
+    }
+
+    .modal {
+      width: min(520px, 100%);
+      border-radius: 12px;
+      border: 1px solid #e4ebf6;
+      background: #fff;
+      box-shadow: 0 22px 40px rgba(15, 23, 42, 0.2);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid #e8eef9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-head h3 {
+      font-size: 17px;
+      color: #1a3464;
+    }
+
+    .modal-close {
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: #f2f5ff;
+      color: #234281;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .modal-body label {
+      font-size: 13px;
+      color: #4b5f80;
+      font-weight: 600;
+    }
+
+    .modal-body textarea {
+      border: 1px solid #cdd8ea;
+      border-radius: 10px;
+      padding: 10px;
+      min-height: 100px;
+      resize: vertical;
+      outline: none;
+    }
+
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 0 14px 14px;
+    }
+
+    .btn-cancel {
+      border: 1px solid #c8d4ea;
+      border-radius: 10px;
+      background: #fff;
+      color: #1f3563;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-confirm-reject {
+      border: 1px solid #ea580c;
+      border-radius: 10px;
+      background: #ea580c;
+      color: #fff;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* ============================================
+       TOAST NOTIFICATION
+    ============================================ */
+    .toast-wrap {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 80;
+      display: grid;
+      gap: 8px;
+      width: min(360px, calc(100vw - 28px));
+    }
+
+    .toast {
+      border: 1px solid #d4e3ff;
+      background: #fff;
+      border-left: 4px solid var(--primary);
+      border-radius: 10px;
+      box-shadow: var(--shadow-hover);
+      padding: 10px;
+      font-size: 13px;
+      color: #1f3563;
+      animation: slideIn 0.2s ease;
+    }
+
+    .toast.success {
+      border-left-color: var(--success);
+    }
+
+    .toast.warn {
+      border-left-color: var(--warn);
+    }
+
+    .toast.error {
+      border-left-color: var(--danger);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================
+       RESPONSIVE (Tablet-friendly)
+    ============================================ */
+    @media (max-width: 1180px) {
+      .kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .lower-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .layout {
+        grid-template-columns: 86px 1fr;
+      }
+
+      .brand {
+        justify-content: center;
+        padding: 10px 8px;
+      }
+
+      .brand-meta {
+        display: none;
+      }
+
+      .brand-avatar {
+        width: 38px;
+        height: 38px;
+        font-size: 14px;
+      }
+
+      .menu a {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+        font-size: 11px;
+        gap: 6px;
+      }
+
+      .menu a span:last-child {
+        line-height: 1.25;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+      }
+
+      .menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .header {
+        grid-template-columns: 1fr;
+      }
+
+      .header-actions {
+        justify-content: flex-start;
+      }
+
+      .kpis {
+        grid-template-columns: 1fr;
+      }
+
+      .payment-split-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .management-split-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .management-box table {
+        min-width: 720px;
+      }
+
+      .management-split-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    /* ============================================
+       UNIFIED STYLE OVERRIDE
+    ============================================ */
+    :root {
+      --bg: #f3e8ff;
+      --panel: rgba(255, 255, 255, 0.84);
+      --line: #eadbff;
+      --primary: #ec4899;
+      --shadow: 0 12px 26px rgba(76, 29, 149, 0.14);
+      --shadow-hover: 0 16px 30px rgba(76, 29, 149, 0.24);
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 8% 0%, rgba(244, 114, 182, 0.38) 0%, transparent 34%),
+        radial-gradient(circle at 96% 18%, rgba(99, 102, 241, 0.34) 0%, transparent 30%),
+        linear-gradient(140deg, #d946ef 0%, #7c3aed 48%, #4f46e5 100%);
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, rgba(30, 27, 75, 0.96) 0%, rgba(76, 29, 149, 0.96) 100%);
+      border-right: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(6px);
+    }
+
+    .brand, .menu a {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .menu a:hover, .menu a.active {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .panel {
+      background: var(--panel);
+      border-color: var(--line);
+      backdrop-filter: blur(4px);
+    }
+
+    .panel h2 {
+      color: #4c1d95;
+    }
+
+    .btn-primary, .btn-main, .btn-action, .btn-save, .btn-update {
+      background: linear-gradient(135deg, #ec4899, #6366f1);
+      border: none;
+      color: #fff;
+    }
+
+    .btn-primary:hover, .btn-main:hover, .btn-action:hover, .btn-save:hover, .btn-update:hover {
+      filter: brightness(1.04);
+    }
+
+    input, textarea, select, .search input {
+      border-color: #e9d5ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- =================================================
+         Sidebar
+    ================================================== -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-avatar" aria-hidden="true"><img src="../assets/images/logo1.jpg" alt="Job Portal logo"></div>
+        <div class="brand-meta">
+          <div class="brand-name">Admin</div>
+          <div class="brand-role">System Manager</div>
+        </div>
+      </div>
+      <ul class="menu">
+        <li><a href="#" class="active" data-view="overview"><span>◷</span><span>Báo cáo và Thống kê</span></a></li>
+        <li><a href="#" data-view="approval"><span>✓</span><span>Kiểm duyệt tin</span></a></li>
+        <li><a href="#" data-view="users"><span>◉</span><span>Quản lý người dùng & Công ty</span></a></li>
+        <li><a href="#" data-view="industries"><span>▣</span><span>Danh mục hệ thống</span></a></li>
+        <li><a href="#" data-view="payments"><span>💳</span><span>Thanh toán</span></a></li>
+        <li><a href="#" data-view="policies"><span>▤</span><span>Chính sách</span></a></li>
+        <li><a href="#" data-view="contacts"><span>✉</span><span>Danh sách liên hệ</span></a></li>
+        <li><a href="#" data-view="settings"><span>⚙</span><span>Cài đặt hệ thống</span></a></li>
+        <li><a href="#" data-view="logs"><span>📜</span><span>Nhật ký hoạt động</span></a></li>
+        <li><a href="debug.html"><span>Debug</span></a></li>
+      </ul>
+    </aside>
+
+    <!-- =================================================
+         Main
+    ================================================== -->
+    <main class="main">
+      <!-- Header with global search + notifications + logout -->
+      <section class="panel header">
+        <div class="search">
+          <input id="globalSearch" type="text" placeholder="Tìm theo tên công ty hoặc tên người dùng..." />
+          <span class="icon">⌕</span>
+        </div>
+        <div class="header-actions">
+          <select id="exportFormat" class="select-control">
+            <option value="excel">Excel (CSV)</option>
+            <option value="pdf">PDF</option>
+          </select>
+          <button id="btnBell" class="btn btn-light" type="button">Thông báo (3)</button>
+          <button id="btnExport" class="btn btn-export" type="button">Xuất file (Excel/PDF)</button>
+          <button id="btnLogout" class="btn btn-logout" type="button">Đăng xuất</button>
+        </div>
+      </section>
+
+      <!-- KPI Cards -->
+      <section class="kpis">
+        <article class="kpi">
+          <div class="kpi-icon">👥</div>
+          <div>
+            <div class="kpi-title">Tổng người dùng</div>
+            <div id="kpiUsers" class="kpi-value">0</div>
+          </div>
+        </article>
+
+        <article class="kpi">
+          <div class="kpi-icon">💰</div>
+          <div>
+            <div class="kpi-title">Doanh thu / Tin mới</div>
+            <div id="kpiRevenuePosts" class="kpi-value">0</div>
+          </div>
+        </article>
+
+        <article class="kpi">
+          <div class="kpi-icon">📋</div>
+          <div>
+            <div class="kpi-title">Tin cho duyệt</div>
+            <div id="kpiPending" class="kpi-value">0</div>
+          </div>
+        </article>
+
+        <article class="kpi">
+          <div class="kpi-icon">⚠</div>
+          <div>
+            <div class="kpi-title">Báo cáo vi phạm</div>
+            <div id="kpiViolation" class="kpi-value">0</div>
+          </div>
+        </article>
+      </section>
+
+      <!-- =================================================
+           UC-3.3.1 Kiem duyet tin
+      ================================================== -->
+      <section id="approvalSection" class="panel admin-view">
+        <h2 id="approvalTitle">Danh sách tin cho kiểm duyệt</h2>
+
+        <div id="approvalPanel">
+        <div class="filters" id="filterGroup">
+          <button class="filter-btn active" data-filter="all">Tất cả</button>
+          <button class="filter-btn" data-filter="pending">Cho duyệt</button>
+          <button class="filter-btn" data-filter="violation">Vi phạm</button>
+          <button class="filter-btn" data-filter="locked">Đã khóa</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tên Job</th>
+                <th>Công ty</th>
+                <th>Nguời đăng</th>
+                <th>Ngày gửi</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="pendingTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <div id="pageInfo" class="page-info">Trang 1 / 1</div>
+          <div class="pager">
+            <button id="btnPrevPage" type="button">Trang trước</button>
+            <button id="btnNextPage" type="button">Trang sau</button>
+          </div>
+        </div>
+        </div>
+
+        <!-- Lower sections -->
+        <div id="overviewGrid" class="lower-grid admin-view">
+          <!-- Fake chart -->
+          <article id="growthPanel" class="panel">
+            <div class="table-toolbar">
+              <h2>Tăng trưởng người dùng</h2>
+              <select id="statsRange" class="select-control">
+                <option value="7d">7 ngày</option>
+                <option value="30d">30 ngày</option>
+                <option value="90d">90 ngày</option>
+                <option value="1y">1 năm</option>
+              </select>
+            </div>
+            <div class="bars" id="growthBars"></div>
+            <div id="statsSummary" class="summary-grid"></div>
+            <div id="approvalStatusChart" class="status-chart"></div>
+          </article>
+
+          <article id="usersPanel" class="panel">
+            <h2>Quản lý người dùng & Công ty</h2>
+            <div class="table-toolbar">
+              <button class="scope-btn active" type="button" data-scope="all">Tất cả</button>
+              <button class="scope-btn" type="button" data-scope="candidate">Ứng viên</button>
+              <button class="scope-btn" type="button" data-scope="company">Công ty</button>
+              <select id="userStatusFilter" class="select-control">
+                <option value="all">Trạng thái: Tất cả</option>
+                <option value="active">Đang hoạt động</option>
+                <option value="locked">Đã khóa</option>
+              </select>
+              <select id="userRoleFilter" class="select-control">
+                <option value="all">Vai trò: Tất cả</option>
+                <option value="candidate">Ứng viên</option>
+                <option value="recruiter">Nhà tuyển dụng</option>
+                <option value="company">Công ty</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <div class="management-split-grid">
+              <section class="management-box">
+                <div class="management-title">Danh sách tài khoản</div>
+                <div class="user-table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Tài khoản</th>
+                        <th>Email</th>
+                        <th>Vai trò</th>
+                        <th>Ngày tham gia</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody id="userTableBody"></tbody>
+                  </table>
+                </div>
+              </section>
+
+              <section class="management-box">
+                <div class="management-title">Danh sách công ty</div>
+                <div class="user-table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Công ty</th>
+                        <th>Email liên hệ</th>
+                        <th>Nhà tuyển dụng</th>
+                        <th>Tin đăng</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody id="companyTableBody"></tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+          </article>
+        </div>
+
+        <div id="systemGrid" class="lower-grid admin-view">
+          <article id="industryPanel" class="panel">
+            <h2>Danh mục hệ thống - Quản lý ngành nghề</h2>
+            <div class="industry-row">
+              <input id="industryInput" type="text" placeholder="Nhập ngành nghề mới..." />
+              <button id="btnAddIndustry" class="btn btn-export" type="button">Thêm nhanh</button>
+            </div>
+            <ul id="industryList" class="industry-list"></ul>
+          </article>
+
+          <article id="logPanel" class="panel">
+            <h2>Nhật ký thông báo hệ thống</h2>
+            <div id="systemLog" class="industry-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <article id="paymentsPanel" class="panel admin-view">
+        <h2>Thanh toán / Nạp tiền</h2>
+        <p style="color:#64748b; font-size:14px; margin-bottom:12px;">Xử lý các yêu cầu nạp tiền của recruiter trước khi cộng vào ví.</p>
+
+        <div style="margin-bottom:12px;">
+          <input id="paymentSearch" type="text" placeholder="Tìm theo nội dung chuyển khoản..." style="width:100%;max-width:420px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#0f172a;" />
+        </div>
+
+        <div class="payment-summary">
+          <div class="summary-box">
+            <div class="label">Số yêu cầu chờ duyệt</div>
+            <div id="paymentPendingCount" class="value">0</div>
+          </div>
+          <div class="summary-box">
+            <div class="label">Tổng số tiền chờ duyệt</div>
+            <div id="paymentPendingTotal" class="value">0đ</div>
+          </div>
+        </div>
+
+        <div class="payment-split-grid">
+          <section class="payment-box">
+            <div class="payment-history-title">Yêu cầu chờ duyệt</div>
+            <div class="user-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Mã GD</th>
+                    <th>Recruiter</th>
+                    <th>Số tiền</th>
+                    <th>Nội dung</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="depositRequestsList"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="payment-box payment-history">
+            <div class="payment-history-title">Lịch sử thanh toán</div>
+            <ul id="paymentHistoryList" class="industry-list"></ul>
+          </section>
+        </div>
+      </article>
+
+      <article id="settingsPanel" class="panel admin-view">
+        <h2>Cài đặt hệ thống</h2>
+        <p style="color:#64748b; font-size:14px; margin-bottom:12px;">Đây là khu vực cài đặt demo. Khi bấm sidebar, chỉ hiển thị đúng màn hình liên quan.</p>
+        <div class="settings-stack">
+          <div class="settings-card">
+            <div class="settings-table-title">Tùy chọn hệ thống</div>
+            <div class="settings-form">
+              <label class="settings-row">
+                <span>
+                  Thông báo email
+                  <small>Bật/tắt các thông báo mô phỏng trong hệ thống.</small>
+                </span>
+                <input id="settingEmailNotifications" type="checkbox" />
+              </label>
+
+              <label class="settings-row">
+                <span>
+                  Tự động ghi log
+                  <small>Lưu log các thao tác quản trị vào nhật ký hoạt động.</small>
+                </span>
+                <input id="settingAutoLog" type="checkbox" />
+              </label>
+
+              <label class="settings-row">
+                <span>
+                  Chế độ kiểm duyệt nhanh
+                  <small>Khi bật, ưu tiên hiển thị trạng thái chờ duyệt trong luồng kiểm duyệt.</small>
+                </span>
+                <input id="settingFastModeration" type="checkbox" />
+              </label>
+            </div>
+            <div class="settings-actions">
+              <button id="btnSaveSystemSettings" class="btn btn-export" type="button">Lưu cài đặt</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article id="policiesPanel" class="panel admin-view">
+        <h2>Chính sách hệ thống</h2>
+        <div id="policiesList"></div>
+      </article>
+
+      <article id="contactsPanel" class="panel admin-view">
+        <h2>Danh sách liên hệ</h2>
+        <div id="contactsList" class="contact-list"></div>
+      </article>
+    </main>
+  </div>
+
+  <!-- =================================================
+       Reject Modal
+  ================================================== -->
+  <div id="rejectModalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="rejectModalTitle">
+      <div class="modal-head">
+        <h3 id="rejectModalTitle">Từ chối tin vi phạm</h3>
+        <button id="btnCloseRejectModal" class="modal-close" type="button">×</button>
+      </div>
+      <div class="modal-body">
+        <label for="rejectReason">Lý do vi phạm</label>
+        <textarea id="rejectReason" placeholder="Nhập lý do từ chối để gửi cho nhà tuyển dụng..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button id="btnCancelReject" class="btn-cancel" type="button">Hủy</button>
+        <button id="btnConfirmReject" class="btn-confirm-reject" type="button">Xác nhận từ chối</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="jobDetailModalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="jobDetailModalTitle">
+      <div class="modal-head">
+        <h3 id="jobDetailModalTitle">Chi tiết job</h3>
+        <button id="btnCloseJobDetailModal" class="modal-close" type="button">×</button>
+      </div>
+      <div id="jobDetailBody" class="modal-body"></div>
+      <div class="modal-actions">
+        <button id="btnCloseJobDetail" class="btn-cancel" type="button">Đóng</button>
+        <button id="btnApproveFromDetail" class="btn-confirm-reject" style="background:#16a34a;border-color:#16a34a;" type="button">Phê duyệt</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="permissionModalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="permissionModalTitle">
+      <div class="modal-head">
+        <h3 id="permissionModalTitle">Phân quyền người dùng</h3>
+        <button id="btnClosePermissionModal" class="modal-close" type="button">×</button>
+      </div>
+      <div id="permissionModalBody" class="modal-body"></div>
+      <div class="modal-actions">
+        <button id="btnCancelPermission" class="btn-cancel" type="button">Hủy</button>
+        <button id="btnSavePermission" class="btn-confirm-reject" style="background:#2563eb;border-color:#2563eb;" type="button">Lưu phân quyền</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="contactModalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+      <div class="modal-head">
+        <h3 id="contactModalTitle">Chi tiết liên hệ</h3>
+        <button id="btnCloseContactModal" class="modal-close" type="button">×</button>
+      </div>
+      <div id="contactModalBody" class="modal-body"></div>
+      <div class="modal-body" style="padding-top:0; display:grid; gap:10px;">
+        <div class="field">
+          <label for="contactDepartment">Chuyển cho bộ phận</label>
+          <select id="contactDepartment">
+            <option value="support">Hỗ trợ kỹ thuật</option>
+            <option value="finance">Tài chính / Thanh toán</option>
+            <option value="recruitment">Tuyển dụng / Tin đăng</option>
+            <option value="account">Tài khoản / Quyền truy cập</option>
+            <option value="other">Khác</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="contactReplyNote">Phản hồi / Ghi chú xử lý</label>
+          <textarea id="contactReplyNote" placeholder="Nhập phản hồi gửi cho người liên hệ hoặc ghi chú nội bộ..."></textarea>
+        </div>
+        <div class="field">
+          <label>Lịch sử xử lý</label>
+          <div id="contactHistoryList" style="border:1px solid #e5e7eb;border-radius:10px;background:#fff;max-height:180px;overflow:auto;padding:8px;display:grid;gap:6px;"></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="btnCloseContact" class="btn-cancel" type="button">Đóng</button>
+        <button id="btnForwardContact" class="btn-confirm-reject" style="background:#f59e0b;border-color:#f59e0b;" type="button">Chuyển xử lý</button>
+        <button id="btnReplyContact" class="btn-confirm-reject" style="background:#2563eb;border-color:#2563eb;" type="button">Phản hồi</button>
+        <button id="btnMarkContactDone" class="btn-confirm-reject" style="background:#16a34a;border-color:#16a34a;" type="button">Đánh dấu đã xử lý</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="userDetailModalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="userDetailModalTitle">
+      <div class="modal-head">
+        <h3 id="userDetailModalTitle">Hồ sơ tài khoản</h3>
+        <button id="btnCloseUserDetailModal" class="modal-close" type="button">×</button>
+      </div>
+      <div id="userDetailBody" class="modal-body"></div>
+      <div class="modal-actions">
+        <button id="btnCloseUserDetail" class="btn-cancel" type="button">Đóng</button>
+        <button id="btnToggleFromDetail" class="btn-confirm-reject" style="background:#2563eb;border-color:#2563eb;" type="button">Khoa/Mo tai khoan</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="companyDetailModalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="companyDetailModalTitle">
+      <div class="modal-head">
+        <h3 id="companyDetailModalTitle">Hồ sơ công ty</h3>
+        <button id="btnCloseCompanyDetailModal" class="modal-close" type="button">×</button>
+      </div>
+      <div id="companyDetailBody" class="modal-body"></div>
+      <div class="modal-actions">
+        <button id="btnCloseCompanyDetail" class="btn-cancel" type="button">Đóng</button>
+        <button id="btnToggleCompanyStatus" class="btn-confirm-reject" style="background:#2563eb;border-color:#2563eb;" type="button">Khoa/Mo cong ty</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div id="toastWrap" class="toast-wrap"></div>
+
+  <script src="../Data/data-init.js"></script>
+  <script src="../controllers/auth.js"></script>
+  <script src="../controllers/admin.js"></script>
+</body>
+</html>
