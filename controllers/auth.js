@@ -161,8 +161,14 @@
     return { success: true, user: user };
   }
 
-  function sendOtpMock() { //Hàm giả lập gửi mã OTP (One-Time Password) cho người dùng. Trong thực tế, bạn sẽ cần tích hợp với một dịch vụ gửi email hoặc SMS để gửi mã OTP thực sự đến người dùng. Tuy nhiên, trong trường hợp này, hàm này chỉ tạo ra một mã OTP cố định (ví dụ: "123456") và hiển thị nó thông qua một hộp thoại alert. Mã OTP này sau đó có thể được sử dụng để xác thực người dùng trong quá trình đặt lại mật khẩu hoặc các tình huống tương tự.
-    var otp = '123456';
+  // Biến toàn cục lưu OTP tạm thời (demo, không bảo mật)
+  var _lastOtp = null;
+  function generateOtp() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+  function sendOtpMock() {
+    var otp = generateOtp();
+    _lastOtp = otp;
     alert('Ma OTP cua ban la: ' + otp);
     return otp;
   }
@@ -276,7 +282,7 @@
       return { success: false, message: 'Vui lòng điển đầy đủ thông tin.' };
     }
 
-    if (String(otp).trim() !== '123456') {
+    if (String(otp).trim() !== _lastOtp) {
       return { success: false, message: 'OTP không đúng.' };
     }
 
@@ -305,6 +311,7 @@
     registerCandidate: registerCandidate,
     registerRecruiter: registerRecruiter,
     sendOtpMock: sendOtpMock,
+    _lastOtp: function() { return _lastOtp; },
     login: login,
     logout: logout,
     bindLogoutButtons: bindLogoutButtons,

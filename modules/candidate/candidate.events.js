@@ -304,12 +304,6 @@
         deps.el.openAccountEditBtn.addEventListener("click", deps.openAccountSettingsModal);
       }
 
-      if (deps.el.accountSettingsCloseEl) {
-        deps.el.accountSettingsCloseEl.addEventListener("click", function () {
-          deps.closeAccountSettingsModal();
-        });
-      }
-
       if (deps.el.accountSettingsCancelEl) {
         deps.el.accountSettingsCancelEl.addEventListener("click", function () {
           deps.closeAccountSettingsModal();
@@ -318,14 +312,6 @@
 
       if (deps.el.accountSettingsSaveEl) {
         deps.el.accountSettingsSaveEl.addEventListener("click", deps.submitAccountSettings);
-      }
-
-      if (deps.el.accountSettingsBackdropEl) {
-        deps.el.accountSettingsBackdropEl.addEventListener("click", function (event) {
-          if (event.target === deps.el.accountSettingsBackdropEl) {
-            deps.closeAccountSettingsModal();
-          }
-        });
       }
 
       bindSidebarNavigation();

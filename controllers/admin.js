@@ -1,11 +1,11 @@
-// Mã nguồn quản trị viên cho hệ thống tuyển dụng trực tuyến
-(function () {
+
+(function () { // Kiểm tra quyền truy cập
   if (!window.Auth || !Auth.checkRole("admin")) {
     window.location.href = "login.html";
     return;
   }
 
-  var AdminModules = window.AdminModules || {};
+  var AdminModules = window.AdminModules || {}; 
   var AdminState = AdminModules.state || {};
   var AdminStorage = AdminModules.storage || {};
   var AdminView = AdminModules.view || {};
@@ -94,7 +94,7 @@
         paymentSearchKeyword: ""
       };
 
-  var el = {
+  var el = { // Các phần tử DOM chính
     pendingTableBody: document.getElementById("pendingTableBody"),
     userTableBody: document.getElementById("userTableBody"),
     companyTableBody: document.getElementById("companyTableBody"),
@@ -186,7 +186,7 @@
     btnToggleCompanyStatus: document.getElementById("btnToggleCompanyStatus")
   };
 
-  var persistAll = typeof AdminStorage.createPersistAll === "function"
+  var persistAll = typeof AdminStorage.createPersistAll === "function" // Tạo hàm lưu trữ tất cả dữ liệu
     ? AdminStorage.createPersistAll({
         state: state,
         STORAGE: STORAGE,
@@ -194,22 +194,22 @@
       })
     : function () {};
 
-  var syncUsersToAuthStore = typeof AdminStorage.createSyncUsersToAuthStore === "function"
+  var syncUsersToAuthStore = typeof AdminStorage.createSyncUsersToAuthStore === "function" // Tạo hàm đồng bộ người dùng sang Auth Store (nếu có)
     ? AdminStorage.createSyncUsersToAuthStore({
         state: state,
         writeJson: writeJson
       })
     : function () {};
 
-  var syncSharedJobs = typeof AdminStorage.createSyncSharedJobs === "function"
+  var syncSharedJobs = typeof AdminStorage.createSyncSharedJobs === "function" // Tạo hàm đồng bộ tin đăng đã duyệt sang Shared Jobs (nếu có)
     ? AdminStorage.createSyncSharedJobs({ readJson: readJson })
     : function () {};
 
-  var patchSharedJob = typeof AdminStorage.createPatchSharedJob === "function"
+  var patchSharedJob = typeof AdminStorage.createPatchSharedJob === "function" // Tạo hàm cập nhật tin đăng đã duyệt trong Shared Jobs (nếu có)
     ? AdminStorage.createPatchSharedJob({ readJson: readJson })
     : function () {};
 
-  var toast = typeof AdminSystem.toast === "function" ? AdminSystem.toast : function () {};
+  var toast = typeof AdminSystem.toast === "function" ? AdminSystem.toast : function () {};// Hàm hiển thị thông báo (nếu có)
   var getModuleLabel = typeof AdminSystem.getModuleLabel === "function"
     ? function (module) { return AdminSystem.getModuleLabel(module, normalize); }
     : function () { return "Hệ thống"; };
@@ -217,7 +217,7 @@
   var formatDateTime = typeof AdminSystem.formatDateTime === "function" ? AdminSystem.formatDateTime : function () { return "Không rõ"; };
   var formatCurrency = typeof AdminSystem.formatCurrency === "function" ? AdminSystem.formatCurrency : function (amount) { return String(amount || 0); };
 
-  var renderActivityLogs = typeof AdminSystem.createRenderActivityLogs === "function"
+  var renderActivityLogs = typeof AdminSystem.createRenderActivityLogs === "function" // Tạo hàm hiển thị nhật ký hoạt động
     ? AdminSystem.createRenderActivityLogs({
         state: state,
         el: el,
@@ -226,8 +226,8 @@
         formatDateTime: formatDateTime
       })
     : function () {};
-
-  var addLog = typeof AdminSystem.createAddLog === "function"
+ 
+  var addLog = typeof AdminSystem.createAddLog === "function"// Tạo hàm thêm nhật ký hoạt động
     ? AdminSystem.createAddLog({
         state: state,
         persistAll: persistAll,
@@ -300,18 +300,7 @@
       })
     : function () {};
 
-  var approveJob = typeof AdminJobs.createApproveJob === "function"
-    ? AdminJobs.createApproveJob({
-        state: state,
-        persistAll: persistAll,
-        patchSharedJob: patchSharedJob,
-        renderPendingTable: renderPendingTable,
-        renderKpis: function () {},
-        addLog: addLog,
-        closeJobDetailModal: closeJobDetailModal,
-        toast: toast
-      })
-    : function () {};
+  var approveJob;
 
   var openJobDetailModal = typeof AdminJobs.createOpenJobDetailModal === "function"
     ? AdminJobs.createOpenJobDetailModal({
@@ -331,30 +320,8 @@
         el: el
       })
     : function () {};
-  var rejectJob = typeof AdminJobs.createRejectJob === "function"
-    ? AdminJobs.createRejectJob({
-        state: state,
-        el: el,
-        persistAll: persistAll,
-        renderPendingTable: renderPendingTable,
-        renderKpis: function () {},
-        addLog: addLog,
-        closeRejectModal: closeRejectModal,
-        toast: toast
-      })
-    : function () {};
-  var deletePendingJob = typeof AdminJobs.createDeletePendingJob === "function"
-    ? AdminJobs.createDeletePendingJob({
-        state: state,
-        persistAll: persistAll,
-        syncSharedJobs: syncSharedJobs,
-        getFilteredPendingJobs: getFilteredPendingJobs,
-        renderPendingTable: renderPendingTable,
-        renderKpis: function () {},
-        addLog: addLog,
-        toast: toast
-      })
-    : function () {};
+  var rejectJob;
+  var deletePendingJob;
   var togglePinnedJob = typeof AdminJobs.createTogglePinnedJob === "function"
     ? AdminJobs.createTogglePinnedJob({
         state: state,
@@ -429,21 +396,7 @@
 
   var closeContactModal = function () {};
 
-  var toggleCompanyStatus = typeof AdminUsers.createToggleCompanyStatus === "function"
-    ? AdminUsers.createToggleCompanyStatus({
-        state: state,
-        persistAll: persistAll,
-        syncUsersToAuthStore: syncUsersToAuthStore,
-        renderUsers: renderUsers,
-        renderCompanyTable: renderCompanyTable,
-        renderKpis: function () {},
-        addLog: addLog,
-        openCompanyDetailModal: openCompanyDetailModal,
-        getCompanyRecords: getCompanyRecords,
-        normalize: normalize,
-        toast: toast
-      })
-    : function () {};
+  var toggleCompanyStatus;
 
   var toggleUserStatus = typeof AdminUsers.createToggleUserStatus === "function"
     ? AdminUsers.createToggleUserStatus({
@@ -459,6 +412,8 @@
         toast: toast
       })
     : function () {};
+
+  var deleteUser;
 
   var openUserDetailModal = typeof AdminUsers.createOpenUserDetailModal === "function"
     ? AdminUsers.createOpenUserDetailModal({
@@ -570,7 +525,7 @@
         closeJobDetailModal: closeJobDetailModal,
         toast: toast
       })
-    : approveJob;
+    : function () {};
 
   rejectJob = typeof AdminJobs.createRejectJob === "function"
     ? AdminJobs.createRejectJob({
@@ -583,7 +538,7 @@
         closeRejectModal: closeRejectModal,
         toast: toast
       })
-    : rejectJob;
+    : function () {};
 
   deletePendingJob = typeof AdminJobs.createDeletePendingJob === "function"
     ? AdminJobs.createDeletePendingJob({
@@ -596,7 +551,7 @@
         addLog: addLog,
         toast: toast
       })
-    : deletePendingJob;
+    : function () {};
 
   toggleCompanyStatus = typeof AdminUsers.createToggleCompanyStatus === "function"
     ? AdminUsers.createToggleCompanyStatus({
@@ -612,7 +567,25 @@
         normalize: normalize,
         toast: toast
       })
-    : toggleCompanyStatus;
+    : function () {};
+
+  deleteUser = typeof AdminUsers.createDeleteUser === "function"
+    ? AdminUsers.createDeleteUser({
+        state: state,
+        persistAll: persistAll,
+        syncUsersToAuthStore: syncUsersToAuthStore,
+        renderUsers: renderUsers,
+        renderCompanyTable: renderCompanyTable,
+        renderKpis: renderKpis,
+        closePermissionModal: closePermissionModal,
+        closeUserDetailModal: closeUserDetailModal,
+        closeContactModal: function () { return closeContactModal(); },
+        getCurrentUser: Auth.getCurrentUser,
+        normalize: normalize,
+        addLog: addLog,
+        toast: toast
+      })
+    : function () {};
 
   var renderGrowthChart = typeof AdminView.createRenderGrowthChart === "function"
     ? AdminView.createRenderGrowthChart({
@@ -769,6 +742,7 @@
         setActiveView: setActiveView,
         togglePinnedJob: togglePinnedJob,
         toggleUserStatus: toggleUserStatus,
+        deleteUser: deleteUser,
         toggleCompanyStatus: toggleCompanyStatus,
         normalize: normalize,
         toast: toast
@@ -795,7 +769,6 @@
     renderDepositRequests();
     bindEvents();
     setActiveView("overview");
-    renderUsers();
     addLog("Hệ thống sẵn sàng. Dữ liệu được tải từ Auth.", { module: "system", force: true });
   }
 

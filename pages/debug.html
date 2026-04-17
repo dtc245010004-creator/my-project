@@ -1,920 +1,193 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Debug Console - Job Portal Platform</title>
-  <link rel="icon" type="image/jpeg" href="../assets/images/logo1.jpg" />
-  <style>
-    :root {
-      --bg-1: #eeccff;
-      --bg-2: #5b3ee8;
-      --card-bg: rgba(255, 255, 255, 0.88);
-      --line: #e8d6ff;
-      --text: #1f1b3a;
-      --sub: #6b6494;
-      --ok: #0f9f5f;
-      --warn: #b77700;
-      --err: #c82639;
-      --radius: 14px;
-      --shadow: 0 14px 28px rgba(49, 25, 88, 0.16);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: Segoe UI, Tahoma, Arial, sans-serif;
-      color: var(--text);
-      min-height: 100vh;
-      padding: 18px;
-      background:
-        radial-gradient(circle at 8% 0%, rgba(255, 255, 255, 0.36) 0%, transparent 28%),
-        radial-gradient(circle at 100% 20%, rgba(255, 255, 255, 0.18) 0%, transparent 34%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2));
-    }
-
-    .wrap {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      gap: 12px;
-    }
-
-    .hero,
-    .card {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-
-    .hero {
-      background: linear-gradient(135deg, rgba(236, 72, 153, 0.94), rgba(99, 102, 241, 0.96));
-      color: #fff;
-      padding: 16px;
-      display: grid;
-      gap: 8px;
-    }
-
-    .hero-head {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .hero-head img {
-      width: 46px;
-      height: 46px;
-      border-radius: 12px;
-      object-fit: cover;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-    }
-
-    .hero h1 {
-      font-size: 24px;
-    }
-
-    .hero p {
-      color: #f3e8ff;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .card {
-      background: var(--card-bg);
-      padding: 14px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .card h2 {
-      color: #4d2f97;
-      font-size: 18px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .kpi {
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.72);
-      padding: 10px;
-      display: grid;
-      gap: 4px;
-    }
-
-    .kpi small {
-      font-size: 11px;
-      color: var(--sub);
-      text-transform: uppercase;
-      letter-spacing: 0.2px;
-      font-weight: 700;
-    }
-
-    .kpi strong {
-      font-size: 26px;
-      line-height: 1;
-      color: #47288f;
-    }
-
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-
-    button,
-    select,
-    input {
-      font-family: inherit;
-      font-size: 13px;
-    }
-
-    button {
-      border: 1px solid #d4c1ff;
-      border-radius: 9px;
-      background: #fff;
-      color: #3f2a84;
-      padding: 8px 11px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: filter 0.18s ease;
-    }
-
-    button:hover {
-      filter: brightness(1.04);
-    }
-
-    button.primary,
-    button.success,
-    button.warn,
-    button.danger {
-      border: none;
-      color: #fff;
-    }
-
-    button.primary {
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    }
-
-    button.success {
-      background: linear-gradient(135deg, #10b981, #059669);
-    }
-
-    button.warn {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      box-shadow: 0 10px 18px rgba(217, 119, 6, 0.18);
-    }
-
-    button.danger {
-      background: linear-gradient(135deg, #ef4444, #b91c1c);
-      box-shadow: 0 10px 18px rgba(185, 28, 28, 0.2);
-    }
-
-    button.danger:hover {
-      filter: brightness(1.02) saturate(1.05);
-    }
-
-    button.warn:hover {
-      filter: brightness(1.03) saturate(1.03);
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      padding: 4px 8px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .pill.ok {
-      color: var(--ok);
-      border-color: #97e4bf;
-      background: #ecfdf5;
-    }
-
-    .pill.warn {
-      color: var(--warn);
-      border-color: #f7d188;
-      background: #fffbeb;
-    }
-
-    .pill.err {
-      color: var(--err);
-      border-color: #ffc3c7;
-      background: #fef2f2;
-    }
-
-    .list {
-      list-style: none;
-      display: grid;
-      gap: 8px;
-    }
-
-    .list li {
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.84);
-      padding: 10px;
-      display: grid;
-      gap: 6px;
-    }
-
-    .line {
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .line.sub {
-      color: var(--sub);
-      font-size: 12px;
-    }
-
-    .io {
-      display: grid;
-      grid-template-columns: 1.15fr 1fr;
-      gap: 10px;
-      align-items: start;
-    }
-
-    .field {
-      display: grid;
-      gap: 6px;
-    }
-
-    .field label {
-      font-size: 12px;
-      color: #5a4e8f;
-      font-weight: 700;
-    }
-
-    .field select,
-    .field input {
-      width: 100%;
-      border: 1px solid #dfcdfc;
-      border-radius: 10px;
-      padding: 9px 10px;
-      outline: none;
-      background: #fff;
-      color: #231d43;
-    }
-
-    .pre {
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.76);
-      min-height: 180px;
-      max-height: 420px;
-      overflow: auto;
-      padding: 10px;
-      white-space: pre-wrap;
-      word-break: break-word;
-      font-family: Consolas, monospace;
-      font-size: 12px;
-      color: #231d43;
-    }
-
-    .linkbar {
-      text-align: center;
-      font-size: 12px;
-      color: #eee6ff;
-    }
-
-    .linkbar a {
-      color: #fff;
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    @media (max-width: 980px) {
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .io {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .row {
-        align-items: stretch;
-      }
-
-      .row button {
-        width: 100%;
-      }
-    }
-  </style>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Debug — JobPortalPlatform</title>
+	<style>
+		body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:16px;background:#f7f8fb;color:#111}
+		h1{margin:0 0 12px}
+		.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+		button{padding:8px 10px;border:1px solid #cbd5e1;background:#fff;border-radius:6px;cursor:pointer}
+		button.warn{background:#fff6f6;border-color:#f5c2c7}
+		textarea{width:100%;height:90px;margin-top:6px;padding:8px;border-radius:6px;border:1px solid #e2e8f0}
+		pre#output{background:#041029;color:#e6f0ff;padding:12px;border-radius:6px;min-height:160px;overflow:auto}
+		.panel{margin-bottom:12px}
+		label{font-size:13px;color:#374151}
+	</style>
 </head>
 <body>
-  <div class="wrap">
-    <section class="hero">
-      <div class="hero-head">
-        <img src="../assets/images/logo1.jpg" alt="Job Portal logo" />
-        <h1>Debug Console - Job Portal Platform</h1>
-      </div>
-      <p>
-        Cong cu debug localStorage/sessionStorage cho he thong. Ho tro health check,
-        dong bo key lech, reset du lieu mau, xem/xoa key va import-export snapshot.
-      </p>
-    </section>
-
-    <section class="card">
-      <h2>Tong Quan Du Lieu</h2>
-      <div id="dashboardGrid" class="grid"></div>
-      <div class="row">
-        <button id="btnRefresh" class="primary">Lam moi tong quan</button>
-        <button id="btnCheckIntegrity" class="success">Kiem tra tinh toan ven</button>
-        <button id="btnRepair" class="warn">Sua du lieu lech key</button>
-        <button id="btnResetAll" class="danger">Reset toan bo va tao lai mau</button>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>Health Check</h2>
-      <ul id="integrityList" class="list"></ul>
-    </section>
-
-    <section class="card">
-      <h2>Storage Actions</h2>
-      <div class="row">
-        <button id="btnClearUsers" class="danger">Xoa users</button>
-        <button id="btnClearJobs" class="danger">Xoa jobs + JOBS_DATA</button>
-        <button id="btnClearApps" class="danger">Xoa applications + APPLICATIONS_DATA</button>
-        <button id="btnClearInterviews" class="danger">Xoa interviews</button>
-        <button id="btnClearSession" class="warn">Xoa session currentUser</button>
-      </div>
-      <div class="row">
-        <button id="btnExport" class="success">Export snapshot JSON</button>
-        <button id="btnOpenImport" class="primary" type="button">Import snapshot JSON</button>
-        <input id="importInput" type="file" accept="application/json" hidden />
-      </div>
-    </section>
-
-    <section class="card io">
-      <div class="field">
-        <label for="keySelect">Storage Explorer</label>
-        <select id="keySelect"></select>
-        <input id="searchInput" type="text" placeholder="Loc theo keyword trong gia tri key..." />
-        <div class="row">
-          <button id="btnViewKey" class="primary">Xem key</button>
-          <button id="btnDeleteKey" class="warn">Xoa key</button>
-        </div>
-        <div id="keyMeta" class="line sub"></div>
-      </div>
-      <div class="field">
-        <label for="keyOutput">Noi dung key</label>
-        <div id="keyOutput" class="pre"></div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>Session & Logs</h2>
-      <div id="sessionInfo" class="line"></div>
-      <div id="logs" class="pre"></div>
-    </section>
-
-    <div class="linkbar">
-      <a href="login.html">Quay lai trang dang nhap</a>
-    </div>
-  </div>
-
-  <script src="../Data/data-init.js"></script>
-  <script>
-    (function () {
-      var CORE_KEYS = [
-        'users',
-        'jobs',
-        'JOBS_DATA',
-        'jobPosts',
-        'applications',
-        'APPLICATIONS_DATA',
-        'interviews',
-        'savedJobs',
-        'candidateCVs',
-        'currentUser'
-      ];
-
-      var el = {
-        dashboardGrid: document.getElementById('dashboardGrid'),
-        integrityList: document.getElementById('integrityList'),
-        keySelect: document.getElementById('keySelect'),
-        searchInput: document.getElementById('searchInput'),
-        keyOutput: document.getElementById('keyOutput'),
-        keyMeta: document.getElementById('keyMeta'),
-        logs: document.getElementById('logs'),
-        sessionInfo: document.getElementById('sessionInfo'),
-        importInput: document.getElementById('importInput'),
-        btnOpenImport: document.getElementById('btnOpenImport'),
-        btnRefresh: document.getElementById('btnRefresh'),
-        btnCheckIntegrity: document.getElementById('btnCheckIntegrity'),
-        btnRepair: document.getElementById('btnRepair'),
-        btnResetAll: document.getElementById('btnResetAll'),
-        btnClearUsers: document.getElementById('btnClearUsers'),
-        btnClearJobs: document.getElementById('btnClearJobs'),
-        btnClearApps: document.getElementById('btnClearApps'),
-        btnClearInterviews: document.getElementById('btnClearInterviews'),
-        btnClearSession: document.getElementById('btnClearSession'),
-        btnExport: document.getElementById('btnExport'),
-        btnViewKey: document.getElementById('btnViewKey'),
-        btnDeleteKey: document.getElementById('btnDeleteKey')
-      };
-
-      function readJson(key, fallback) {
-        try {
-          var raw = localStorage.getItem(key);
-          return raw ? JSON.parse(raw) : fallback;
-        } catch (e) {
-          return fallback;
-        }
-      }
-
-      function writeJson(key, value) {
-        localStorage.setItem(key, JSON.stringify(value));
-      }
-
-      function nowString() {
-        return new Date().toLocaleString('vi-VN');
-      }
-
-      function log(message, level) {
-        var marker = level === 'err' ? '[ERR]' : (level === 'warn' ? '[WARN]' : '[INFO]');
-        el.logs.textContent = nowString() + ' ' + marker + ' ' + message + '\n' + el.logs.textContent;
-      }
-
-      function asArray(key) {
-        var value = readJson(key, []);
-        return Array.isArray(value) ? value : [];
-      }
-
-      function getEffectiveJobs() {
-        var shared = asArray('JOBS_DATA');
-        var legacy = asArray('jobs');
-        return shared.length ? shared : legacy;
-      }
-
-      function getEffectiveApplications() {
-        var shared = asArray('APPLICATIONS_DATA');
-        var legacy = asArray('applications');
-        return shared.length ? shared : legacy;
-      }
-
-      function renderDashboard(logRefresh) {
-        var users = asArray('users');
-        var jobsShared = asArray('JOBS_DATA');
-        var jobsLegacy = asArray('jobs');
-        var appsShared = asArray('APPLICATIONS_DATA');
-        var appsLegacy = asArray('applications');
-        var interviews = asArray('interviews');
-        var cvs = asArray('candidateCVs');
-        var saved = asArray('savedJobs');
-
-        var cards = [
-          { label: 'Users', value: users.length },
-          { label: 'Jobs (effective)', value: getEffectiveJobs().length },
-          { label: 'Applications (effective)', value: getEffectiveApplications().length },
-          { label: 'Interviews', value: interviews.length },
-          { label: 'Saved Jobs', value: saved.length },
-          { label: 'Candidate CVs', value: cvs.length },
-          { label: 'JOBS_DATA / jobs', value: jobsShared.length + ' / ' + jobsLegacy.length },
-          { label: 'APPLICATIONS_DATA / applications', value: appsShared.length + ' / ' + appsLegacy.length }
-        ];
-
-        el.dashboardGrid.innerHTML = cards.map(function (item) {
-          return '<div class="kpi"><small>' + item.label + '</small><strong>' + item.value + '</strong></div>';
-        }).join('');
-
-        renderSessionInfo();
-        fillKeySelect();
-        if (logRefresh) {
-          log('Da lam moi tong quan du lieu.', 'info');
-        }
-      }
-
-      function toResultBadge(level) {
-        if (level === 'ok') return 'ok';
-        if (level === 'warn') return 'warn';
-        return 'err';
-      }
-
-      function buildCheck(level, title, detail) {
-        var cls = toResultBadge(level);
-        return '<li>' +
-          '<div class="row"><span class="pill ' + cls + '">' + level.toUpperCase() + '</span><div class="line"><strong>' + title + '</strong></div></div>' +
-          '<div class="line sub">' + detail + '</div>' +
-        '</li>';
-      }
-
-      function countDuplicateIds(items) {
-        var seen = {};
-        var duplicated = 0;
-        items.forEach(function (item) {
-          var id = String(item && item.id);
-          if (!id || id === 'undefined' || id === 'null') return;
-          if (seen[id]) duplicated += 1;
-          seen[id] = true;
-        });
-        return duplicated;
-      }
-
-      function confirmTypedAction(message, keyword) {
-        var answer = window.prompt(message, '');
-        return String(answer || '').trim().toUpperCase() === String(keyword || '').trim().toUpperCase();
-      }
-
-      function runIntegrityCheck() {
-        var users = asArray('users');
-        var jobsShared = asArray('JOBS_DATA');
-        var jobsLegacy = asArray('jobs');
-        var appsShared = asArray('APPLICATIONS_DATA');
-        var appsLegacy = asArray('applications');
-        var interviews = asArray('interviews');
-
-        var jobs = getEffectiveJobs();
-        var apps = getEffectiveApplications();
-        var results = [];
-
-        results.push(buildCheck(users.length ? 'ok' : 'warn', 'Users dataset', users.length ? 'Co ' + users.length + ' users.' : 'Chua co users.'));
-        results.push(buildCheck(jobs.length ? 'ok' : 'warn', 'Jobs dataset', jobs.length ? 'Co ' + jobs.length + ' jobs.' : 'Chua co jobs.'));
-        results.push(buildCheck(apps.length ? 'ok' : 'warn', 'Applications dataset', apps.length ? 'Co ' + apps.length + ' applications.' : 'Chua co applications.'));
-
-        var jobsMismatch = jobsShared.length !== jobsLegacy.length;
-        var appsMismatch = appsShared.length !== appsLegacy.length;
-
-        results.push(buildCheck(jobsMismatch ? 'warn' : 'ok', 'Sync key jobs', jobsMismatch ? 'JOBS_DATA va jobs dang lech so luong.' : 'JOBS_DATA va jobs da dong bo.'));
-        results.push(buildCheck(appsMismatch ? 'warn' : 'ok', 'Sync key applications', appsMismatch ? 'APPLICATIONS_DATA va applications dang lech so luong.' : 'APPLICATIONS_DATA va applications da dong bo.'));
-
-        var usersDup = countDuplicateIds(users);
-        var jobsDup = countDuplicateIds(jobs);
-        var appsDup = countDuplicateIds(apps);
-
-        results.push(buildCheck(usersDup ? 'err' : 'ok', 'Duplicate user id', usersDup ? 'Phat hien ' + usersDup + ' ban ghi id trung.' : 'Khong co id trung.'));
-        results.push(buildCheck(jobsDup ? 'err' : 'ok', 'Duplicate job id', jobsDup ? 'Phat hien ' + jobsDup + ' ban ghi id trung.' : 'Khong co id trung.'));
-        results.push(buildCheck(appsDup ? 'err' : 'ok', 'Duplicate application id', appsDup ? 'Phat hien ' + appsDup + ' ban ghi id trung.' : 'Khong co id trung.'));
-
-        var jobIds = {};
-        var userIds = {};
-        var appIds = {};
-
-        jobs.forEach(function (job) { jobIds[String(job.id)] = true; });
-        users.forEach(function (user) { userIds[String(user.id)] = true; });
-        apps.forEach(function (app) { appIds[String(app.id)] = true; });
-
-        var orphanByJob = apps.filter(function (app) {
-          return app && app.jobId && !jobIds[String(app.jobId)];
-        }).length;
-
-        var orphanByCandidate = apps.filter(function (app) {
-          return app && app.candidateId && !userIds[String(app.candidateId)];
-        }).length;
-
-        var orphanInterviews = interviews.filter(function (interview) {
-          return interview && interview.applicationId && !appIds[String(interview.applicationId)];
-        }).length;
-
-        results.push(buildCheck(orphanByJob ? 'warn' : 'ok', 'Orphan applications by jobId', orphanByJob ? 'Co ' + orphanByJob + ' application khong tim thay job.' : 'Khong co application mo coi theo job.'));
-        results.push(buildCheck(orphanByCandidate ? 'warn' : 'ok', 'Orphan applications by candidateId', orphanByCandidate ? 'Co ' + orphanByCandidate + ' application khong tim thay candidate.' : 'Khong co application mo coi theo candidate.'));
-        results.push(buildCheck(orphanInterviews ? 'warn' : 'ok', 'Orphan interviews', orphanInterviews ? 'Co ' + orphanInterviews + ' interview khong tim thay application.' : 'Khong co interview mo coi.'));
-
-        el.integrityList.innerHTML = results.join('');
-        log('Da chay health check du lieu.', 'info');
-      }
-
-      function repairData() {
-        var jobs = getEffectiveJobs().map(function (job) {
-          var st = String(job.status || '').toLowerCase();
-          var nextStatus = st === 'active' ? 'open' : (job.status || 'open');
-          return Object.assign({}, job, {
-            status: nextStatus,
-            postedDate: job.postedDate || new Date().toISOString().split('T')[0]
-          });
-        });
-
-        var apps = getEffectiveApplications().map(function (app, idx) {
-          return Object.assign({}, app, {
-            id: app.id || (idx + 1),
-            status: app.status || 'pending',
-            appliedAt: app.appliedAt || new Date().toISOString()
-          });
-        });
-
-        writeJson('JOBS_DATA', jobs);
-        writeJson('jobs', jobs);
-        writeJson('jobPosts', jobs);
-        writeJson('APPLICATIONS_DATA', apps);
-        writeJson('applications', apps);
-
-        if (!Array.isArray(readJson('interviews', null))) writeJson('interviews', []);
-        if (!Array.isArray(readJson('savedJobs', null))) writeJson('savedJobs', []);
-        if (!Array.isArray(readJson('candidateCVs', null))) writeJson('candidateCVs', []);
-
-        renderDashboard(false);
-        runIntegrityCheck();
-        viewSelectedKey();
-        log('Da sua va dong bo cac key du lieu quan trong.', 'warn');
-        alert('Da sua du lieu xong. Vui long kiem tra lai Health Check.');
-      }
-
-      function resetAll() {
-        var ok = confirmTypedAction('Nhap RESET de xac nhan xoa toan bo localStorage/sessionStorage va tao lai du lieu mau.', 'RESET');
-        if (!ok) return;
-
-        localStorage.clear();
-        sessionStorage.clear();
-
-        if (typeof initializeData === 'function') {
-          initializeData(true);
-          log('Da reset all va khoi tao lai du lieu mau.', 'warn');
-        } else {
-          log('Khong tim thay initializeData(). Chi da clear storage.', 'warn');
-        }
-
-        renderDashboard(false);
-        runIntegrityCheck();
-        viewSelectedKey();
-      }
-
-      function fillKeySelect() {
-        var keys = [];
-        for (var i = 0; i < localStorage.length; i += 1) {
-          keys.push(localStorage.key(i));
-        }
-
-        CORE_KEYS.forEach(function (k) {
-          if (keys.indexOf(k) < 0) keys.push(k);
-        });
-
-        keys.sort();
-
-        var current = el.keySelect.value;
-        el.keySelect.innerHTML = keys.map(function (key) {
-          return '<option value="' + key + '">' + key + '</option>';
-        }).join('');
-
-        if (current && keys.indexOf(current) >= 0) {
-          el.keySelect.value = current;
-        }
-      }
-
-      function viewSelectedKey() {
-        var key = el.keySelect.value;
-        if (!key) {
-          el.keyOutput.textContent = '';
-          el.keyMeta.textContent = 'Chua chon key.';
-          return;
-        }
-
-        var raw = localStorage.getItem(key);
-        if (raw === null) {
-          el.keyOutput.textContent = '(Key khong ton tai trong localStorage)';
-          el.keyMeta.textContent = 'Size: 0 bytes';
-          return;
-        }
-
-        var parsed = null;
-        var output = raw;
-
-        try {
-          parsed = JSON.parse(raw);
-          output = JSON.stringify(parsed, null, 2);
-        } catch (e) {
-          parsed = null;
-        }
-
-        var filter = String(el.searchInput.value || '').trim().toLowerCase();
-        if (filter) {
-          if (Array.isArray(parsed)) {
-            var filtered = parsed.filter(function (item) {
-              return JSON.stringify(item).toLowerCase().indexOf(filter) >= 0;
-            });
-            output = JSON.stringify(filtered, null, 2);
-            el.keyMeta.textContent = 'Da loc: ' + filtered.length + '/' + parsed.length + ' records.';
-          } else if (parsed && typeof parsed === 'object') {
-            var reduced = {};
-            Object.keys(parsed).forEach(function (k) {
-              var valueText = JSON.stringify(parsed[k]).toLowerCase();
-              if (k.toLowerCase().indexOf(filter) >= 0 || valueText.indexOf(filter) >= 0) {
-                reduced[k] = parsed[k];
-              }
-            });
-            output = JSON.stringify(reduced, null, 2);
-            el.keyMeta.textContent = 'Da loc object theo keyword.';
-          } else {
-            el.keyMeta.textContent = 'Da loc tren gia tri text.';
-          }
-        } else {
-          el.keyMeta.textContent = 'Size: ' + raw.length + ' bytes';
-        }
-
-        el.keyOutput.textContent = output;
-      }
-
-      function deleteSelectedKey() {
-        var key = el.keySelect.value;
-        if (!key) return;
-
-        var ok = confirmTypedAction('Nhap TEN KEY chinh xac de xoa: ' + key, key);
-        if (!ok) return;
-
-        localStorage.removeItem(key);
-        fillKeySelect();
-        viewSelectedKey();
-        renderDashboard(false);
-        runIntegrityCheck();
-        log('Da xoa key ' + key + '.', 'warn');
-      }
-
-      function exportSnapshot() {
-        var payload = {
-          exportedAt: new Date().toISOString(),
-          localStorage: {},
-          sessionStorage: {}
-        };
-
-        for (var i = 0; i < localStorage.length; i += 1) {
-          var key = localStorage.key(i);
-          payload.localStorage[key] = localStorage.getItem(key);
-        }
-
-        for (var j = 0; j < sessionStorage.length; j += 1) {
-          var sk = sessionStorage.key(j);
-          payload.sessionStorage[sk] = sessionStorage.getItem(sk);
-        }
-
-        var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = 'job-portal-platform-debug-snapshot-' + Date.now() + '.json';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        log('Da export snapshot debug.', 'info');
-      }
-
-      function importSnapshot(file) {
-        if (!file) return;
-
-        var reader = new FileReader();
-        reader.onload = function (event) {
-          try {
-            var data = JSON.parse(String(event.target.result || '{}'));
-            var localData = data.localStorage || {};
-            var sessionData = data.sessionStorage || {};
-
-            Object.keys(localData).forEach(function (k) {
-              localStorage.setItem(k, String(localData[k]));
-            });
-
-            Object.keys(sessionData).forEach(function (k) {
-              sessionStorage.setItem(k, String(sessionData[k]));
-            });
-
-            renderDashboard(false);
-            runIntegrityCheck();
-            viewSelectedKey();
-            log('Da import snapshot thanh cong.', 'info');
-            alert('Import snapshot thanh cong.');
-          } catch (e) {
-            log('Import snapshot that bai: file khong hop le.', 'err');
-            alert('File snapshot khong hop le.');
-          }
-        };
-
-        reader.readAsText(file);
-      }
-
-      function renderSessionInfo() {
-        var sessionUser = sessionStorage.getItem('currentUser');
-        var localUser = localStorage.getItem('currentUser');
-        var text = '';
-
-        if (sessionUser) {
-          try {
-            var s = JSON.parse(sessionUser);
-            text += 'Session currentUser: ' + (s.name || 'Unknown') + ' (' + (s.role || 'unknown') + ')';
-          } catch (e) {
-            text += 'Session currentUser: parse error';
-          }
-        } else {
-          text += 'Session currentUser: chua co';
-        }
-
-        text += ' | ';
-
-        if (localUser) {
-          try {
-            var l = JSON.parse(localUser);
-            text += 'Local currentUser: ' + (l.name || 'Unknown') + ' (' + (l.role || 'unknown') + ')';
-          } catch (e2) {
-            text += 'Local currentUser: parse error';
-          }
-        } else {
-          text += 'Local currentUser: chua co';
-        }
-
-        el.sessionInfo.textContent = text;
-      }
-
-      function clearUsers() {
-        localStorage.removeItem('users');
-        renderDashboard(false);
-        runIntegrityCheck();
-        log('Da xoa users.', 'warn');
-      }
-
-      function clearJobs() {
-        localStorage.removeItem('jobs');
-        localStorage.removeItem('JOBS_DATA');
-        localStorage.removeItem('jobPosts');
-        renderDashboard(false);
-        runIntegrityCheck();
-        log('Da xoa jobs/JOBS_DATA/jobPosts.', 'warn');
-      }
-
-      function clearApplications() {
-        localStorage.removeItem('applications');
-        localStorage.removeItem('APPLICATIONS_DATA');
-        renderDashboard(false);
-        runIntegrityCheck();
-        log('Da xoa applications/APPLICATIONS_DATA.', 'warn');
-      }
-
-      function clearInterviews() {
-        localStorage.removeItem('interviews');
-        renderDashboard(false);
-        runIntegrityCheck();
-        log('Da xoa interviews.', 'warn');
-      }
-
-      function clearSession() {
-        sessionStorage.removeItem('currentUser');
-        renderSessionInfo();
-        log('Da xoa session currentUser.', 'warn');
-      }
-
-      function bindEvents() {
-        el.btnRefresh.addEventListener('click', function () {
-          renderDashboard(true);
-          viewSelectedKey();
-        });
-
-        el.btnCheckIntegrity.addEventListener('click', runIntegrityCheck);
-        el.btnRepair.addEventListener('click', repairData);
-        el.btnResetAll.addEventListener('click', resetAll);
-
-        el.btnClearUsers.addEventListener('click', clearUsers);
-        el.btnClearJobs.addEventListener('click', clearJobs);
-        el.btnClearApps.addEventListener('click', clearApplications);
-        el.btnClearInterviews.addEventListener('click', clearInterviews);
-        el.btnClearSession.addEventListener('click', clearSession);
-
-        el.btnExport.addEventListener('click', exportSnapshot);
-        el.btnOpenImport.addEventListener('click', function () {
-          el.importInput.click();
-        });
-
-        el.importInput.addEventListener('change', function () {
-          importSnapshot(el.importInput.files && el.importInput.files[0]);
-          el.importInput.value = '';
-        });
-
-        el.btnViewKey.addEventListener('click', viewSelectedKey);
-        el.btnDeleteKey.addEventListener('click', deleteSelectedKey);
-        el.keySelect.addEventListener('change', viewSelectedKey);
-        el.searchInput.addEventListener('input', viewSelectedKey);
-
-        window.addEventListener('storage', function () {
-          renderDashboard(false);
-          runIntegrityCheck();
-          viewSelectedKey();
-        });
-      }
-
-      bindEvents();
-      renderDashboard(false);
-      runIntegrityCheck();
-      viewSelectedKey();
-      log('Debug console san sang.', 'info');
-    })();
-  </script>
+	<h1>Debug Console</h1>
+
+	<div class="panel">
+		<div class="row">
+			<button id="btn-local">Show localStorage</button>
+			<button id="btn-keys">List storage keys</button>
+			<button id="btn-admin">Show Admin state</button>
+			<button id="btn-auth">Show Auth users</button>
+			<button id="btn-persist">Call persistAll()</button>
+			<button id="btn-sync">Call syncUsersToAuthStore()</button>
+			<button id="btn-data-init">Run data-init()</button>
+			<button id="btn-export">Export storage</button>
+			<button id="btn-clear" class="warn">Clear localStorage</button>
+			<button id="btn-reload">Reload page</button>
+		</div>
+	</div>
+
+	<div class="panel">
+		<label for="js-code">Run arbitrary JS (expression or statement):</label>
+		<textarea id="js-code" placeholder="e.g. window.location.href or AdminModules.state.getState()"></textarea>
+		<div class="row"><button id="btn-run">Run</button></div>
+	</div>
+
+	<div class="panel">
+		<h2>Output</h2>
+		<pre id="output">Ready.</pre>
+	</div>
+
+	<script>
+		function isLocalDev(){
+			const h = (location.hostname||'').toLowerCase();
+			return h === 'localhost' || h === '127.0.0.1' || h === '::1' || h.includes('staging') || h.endsWith('.local');
+		}
+
+		function isAuthorized(){
+			try{
+				if(isLocalDev()) return true;
+				if(localStorage.DEBUG_ALLOW === '1') return true;
+				if(window.Auth && typeof Auth.getCurrentUser === 'function'){
+					const u = Auth.getCurrentUser();
+					if(u && (u.role === 'admin' || u.role === 'developer' || u.isDev)) return true;
+				}
+			}catch(e){ /* ignore */ }
+			return false;
+		}
+
+		function renderLockUI(){
+			document.body.innerHTML = '';
+			const wrap = document.createElement('div');
+			wrap.style.fontFamily = 'system-ui,Segoe UI,Roboto,Arial';
+			wrap.style.padding = '24px';
+			wrap.innerHTML = `
+				<h1>Debug — Restricted</h1>
+				<p>This debug console is restricted to development / staging environments and admin users.</p>
+				<p>To unlock locally, set <code>localStorage.DEBUG_ALLOW = '1'</code> in the browser console,
+				or provide a configured access key below.</p>
+				<div style="margin-top:12px"><input id="debug-key" placeholder="Enter access key" style="padding:8px;border-radius:6px;border:1px solid #ccc;width:280px;margin-right:8px" /><button id="debug-unlock">Unlock</button></div>
+				<p style="margin-top:12px;color:#444">If you are an admin user, sign in and retry. See README for debug instructions.</p>
+			`;
+			document.body.appendChild(wrap);
+			document.getElementById('debug-unlock').addEventListener('click', ()=>{
+				const v = document.getElementById('debug-key').value || '';
+				const expected = localStorage.DEBUG_KEY || 'debug-secret';
+				if(v === expected){ localStorage.DEBUG_ALLOW = '1'; location.reload(); }
+				else alert('Invalid access key');
+			});
+		}
+
+		if(!isAuthorized()){
+			renderLockUI();
+		} else {
+			(function(){
+				const outEl = document.getElementById('output');
+				function log(v){
+					try{ outEl.textContent = (typeof v === 'string')? v : JSON.stringify(v, null, 2); }
+					catch(e){ outEl.textContent = String(v); }
+				}
+
+				function safeParse(s){ try{ return JSON.parse(s); }catch(e){ return s; } }
+
+				document.getElementById('btn-local').addEventListener('click', ()=>{
+					try{
+						const dump = {};
+						for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); dump[k]=safeParse(localStorage.getItem(k)); }
+						log(dump);
+					}catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-keys').addEventListener('click', ()=>{
+					try{ const keys=[]; for(let i=0;i<localStorage.length;i++) keys.push(localStorage.key(i)); log(keys); }catch(e){log(e.toString())}
+				});
+
+				document.getElementById('btn-admin').addEventListener('click', ()=>{
+					try{
+						if(window.AdminState) return log(window.AdminState);
+						if(window.AdminModules && AdminModules.state && typeof AdminModules.state.getState === 'function') return log(AdminModules.state.getState());
+						log('AdminState / AdminModules.state not found');
+					}catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-auth').addEventListener('click', ()=>{
+					try{
+						if(window.Auth && typeof Auth.getUsers === 'function'){ return log(Auth.getUsers()); }
+						const u = localStorage.getItem('users') || localStorage.getItem('AUTH_USERS');
+						if(u) return log(safeParse(u));
+						log('Auth.getUsers and common keys not found');
+					}catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-persist').addEventListener('click', ()=>{
+					try{
+						if(typeof persistAll === 'function'){ persistAll(); return log('persistAll() called'); }
+						if(window.AdminModules && AdminModules.storage && typeof AdminModules.storage.persistAll === 'function'){ AdminModules.storage.persistAll(); return log('AdminModules.storage.persistAll() called'); }
+						log('persistAll not found');
+					}catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-sync').addEventListener('click', ()=>{
+					try{
+						if(typeof syncUsersToAuthStore === 'function'){ syncUsersToAuthStore(); return log('syncUsersToAuthStore() called'); }
+						if(window.AdminModules && AdminModules.users && typeof AdminModules.users.syncUsersToAuthStore === 'function'){ AdminModules.users.syncUsersToAuthStore(); return log('AdminModules.users.syncUsersToAuthStore() called'); }
+						log('syncUsersToAuthStore not found');
+					}catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-data-init').addEventListener('click', ()=>{
+					try{
+						if(typeof loadAllData === 'function'){ loadAllData(); return log('loadAllData() called'); }
+						if(typeof initData === 'function'){ initData(); return log('initData() called'); }
+						if(window.Data && typeof Data.init === 'function'){ Data.init(); return log('Data.init() called'); }
+						log('No data-init function found');
+					}catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-export').addEventListener('click', ()=>{
+					try{
+						const dump = {};
+						for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); dump[k]=safeParse(localStorage.getItem(k)); }
+						// open in new tab for quick view
+						const w = window.open('','_blank');
+						w.document.write('<pre>'+JSON.stringify(dump,null,2)+'</pre>');
+						// also trigger download as JSON file
+						const filename = 'jobportal-backup-'+(new Date()).toISOString().replace(/[:.]/g,'-')+'.json';
+						const blob = new Blob([JSON.stringify(dump,null,2)], {type:'application/json'});
+						const a = document.createElement('a');
+						a.href = URL.createObjectURL(blob);
+						a.download = filename;
+						document.body.appendChild(a);
+						a.click();
+						a.remove();
+						log('Export opened and download triggered: '+filename);
+					}catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-clear').addEventListener('click', ()=>{
+					if(!confirm('Clear entire localStorage? This cannot be undone.')) return;
+					try{ localStorage.clear(); log('localStorage cleared'); }catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-reload').addEventListener('click', ()=>location.reload());
+
+				document.getElementById('btn-run').addEventListener('click', ()=>{
+					const code = document.getElementById('js-code').value || '';
+					try{
+						let res = eval(code);
+						if(res instanceof Promise){ res.then(r=>log(r)).catch(e=>log(e.toString())); }
+						else log(res);
+					}catch(e){ log(e.toString()); }
+				});
+			})();
+		}
+	</script>
 </body>
 </html>

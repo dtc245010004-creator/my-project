@@ -1,4 +1,4 @@
-(function () {
+(function () { // Khởi tạo module candidate bằng cách kết hợp các API từ các module con, đảm bảo tất cả module con đã được tải trước khi khởi tạo
   var modules = window.CandidateModules || {};
   var storage = modules.Storage || {};
   var coreModule = modules.Core || {};
@@ -175,7 +175,7 @@
     normalize: normalize
   }) : {};
 
-  var jobsApi = typeof jobsModule.createJobsApi === "function" ? jobsModule.createJobsApi({
+  var jobsApi = typeof jobsModule.createJobsApi === "function" ? jobsModule.createJobsApi({ // Truyền các dependencies cần thiết cho module jobs
     state: state,
     el: el,
     writeJson: writeJson,
@@ -191,7 +191,7 @@
     updateStats: function () { if (typeof coreApi.updateStats === "function") coreApi.updateStats(); }
   }) : {};
 
-  var eventsApi = typeof eventsModule.createEventsApi === "function" ? eventsModule.createEventsApi({
+  var eventsApi = typeof eventsModule.createEventsApi === "function" ? eventsModule.createEventsApi({  // Truyền các dependencies cần thiết cho module events
     state: state,
     el: el,
     viewSections: viewSections,
@@ -253,3 +253,22 @@
     initCandidateModule();
   }
 })();
+
+ (function setupSupportWidget() {
+      var widget = document.getElementById('supportWidget');
+      var toggle = document.getElementById('supportToggle');
+      if (!widget || !toggle) return;
+
+      toggle.addEventListener('click', function () {
+        var nextOpen = !widget.classList.contains('open');
+        widget.classList.toggle('open', nextOpen);
+        toggle.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+      });
+
+      document.addEventListener('click', function (event) {
+        if (!widget.classList.contains('open')) return;
+        if (widget.contains(event.target)) return;
+        widget.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    })();

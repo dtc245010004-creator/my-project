@@ -1,4 +1,4 @@
-(function () {
+(function () { // khởi tạo module recruiter bằng cách kết hợp các API từ các module con, đảm bảo tất cả module con đã được tải trước khi khởi tạo
   window.RecruiterModules = window.RecruiterModules || {};
 
   function createRecruiterCoreApi() {
@@ -72,6 +72,7 @@
       newJobTitle: document.getElementById('newJobTitle'),
       newJobSalary: document.getElementById('newJobSalary'),
       newJobDescription: document.getElementById('newJobDescription'),
+      newJobType: document.getElementById('newJobType'),
       newJobLocation: document.getElementById('newJobLocation'),
       newJobRequirements: document.getElementById('newJobRequirements'),
       newJobMaxApplicants: document.getElementById('newJobMaxApplicants'),

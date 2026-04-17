@@ -202,14 +202,15 @@
           return (
             "<div class='job-item'>" +
               "<div class='job-head'>" +
-                "<div class='job-brand'>" + deps.escapeHtml(logo) + "</div>" +
-                "<div>" +
-                  "<div class='job-head-title'>" + deps.escapeHtml(code) + "</div>" +
-                  "<div class='job-head-role'>" + deps.escapeHtml(job.title || "Vị trí đang cập nhật") + "</div>" +
-                  "<div class='job-head-company'>" + deps.escapeHtml(job.company || "Công ty") + "</div>" +
-                "</div>" +
-                "<div class='job-head-icons'><span>💻</span><span>🧠</span></div>" +
-              "</div>" +
+                        "<div class='job-brand'>" + deps.escapeHtml(logo) + "</div>" +
+                    "<div>" +
+                      "<div class='job-head-title'>" + deps.escapeHtml(code) + "</div>" +
+                      "<div class='job-head-role'>" + deps.escapeHtml(job.title || 'Vị trí đang cập nhật') + "</div>" +
+                      "<div class='job-head-company'>" + deps.escapeHtml(job.company || 'Công ty') + "</div>" +
+                    "</div>" +
+                    
+                  "</div>" +
+                  "<div class='status-floating'><span class=\"job-status " + (isClosed ? 'closed' : 'open') + "\">" + statusText + "</span></div>" +
               "<div class='job-pill-row'>" +
                 "<div class='job-meta-pill'><span>📍</span><span>" + deps.escapeHtml(getDisplaySalary(job.salary)) + "</span><span style='opacity:0.45;'>|</span><span>" + deps.escapeHtml(job.location || "Đang cập nhật") + "</span></div>" +
                 "<div class='job-status-pill " + (isClosed ? "closed" : "open") + "'><span>🔒 Trạng thái: " + statusText + "</span><span class='job-status-dot'></span></div>" +

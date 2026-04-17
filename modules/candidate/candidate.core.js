@@ -1,14 +1,17 @@
-(function () {
+(function () { // Khởi tạo module candidate bằng cách kết hợp các API từ các module con, đảm bảo tất cả module con đã được tải trước khi khởi tạo
   window.CandidateModules = window.CandidateModules || {};
+
+
+  
 
   function createCoreApi(deps) {
     function formatDateTime(value) {
       if (!value) {
-        return "Khong ro thoi gian";
+        return "Không rõ thời gian";
       }
       var date = new Date(value);
       if (Number.isNaN(date.getTime())) {
-        return "Khong ro thoi gian";
+        return "Không rõ thời gian";
       }
       return date.toLocaleString("vi-VN");
     }

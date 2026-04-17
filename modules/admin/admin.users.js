@@ -175,6 +175,7 @@
 			deps.el.userTableBody.innerHTML = filteredUsers.map(function (user) {
 				var isActive = user.status === "active";
 				var toggleText = isActive ? "Khóa" : "Mở khóa";
+				var userEmail = String(user.email || "");
 				return (
 					"<tr>" +
 						"<td>" + user.name + "<div class='contact-sub'>" + (user.company || "-") + "</div></td>" +
@@ -183,13 +184,67 @@
 						"<td>" + deps.formatDate(user.joinedAt) + "</td>" +
 						"<td><span class='badge " + (isActive ? "active" : "locked") + "'>" + (isActive ? "Hoạt động" : "Bị khóa") + "</span></td>" +
 						"<td><div class='row-actions'>" +
-							"<button class='btn-xs' data-user-id='" + user.id + "' data-user-action='detail'>Xem hồ sơ</button>" +
-							"<button class='btn-xs' data-user-id='" + user.id + "' data-user-action='permission'>Phân quyền</button>" +
-							"<button class='btn-xs' data-user-id='" + user.id + "' data-user-action='toggle'>" + toggleText + "</button>" +
+							"<button class='btn-xs' data-user-id='" + user.id + "' data-user-email='" + userEmail + "' data-user-action='detail'>Xem hồ sơ</button>" +
+							"<button class='btn-xs' data-user-id='" + user.id + "' data-user-email='" + userEmail + "' data-user-action='permission'>Phân quyền</button>" +
+							"<button class='btn-xs' data-user-id='" + user.id + "' data-user-email='" + userEmail + "' data-user-action='toggle'>" + toggleText + "</button>" +
+							"<button class='btn-xs btn-reject' data-user-id='" + user.id + "' data-user-email='" + userEmail + "' data-user-action='delete'>Xóa</button>" +
 						"</div></td>" +
 					"</tr>"
 				);
 			}).join("");
+		};
+	}
+
+	function createDeleteUser(deps) {
+		return function deleteUser(userId, userEmail) {
+			var numericId = Number(userId);
+			var normalizedEmail = deps.normalize(userEmail || "");
+			var hasValidId = Number.isFinite(numericId);
+			var target = deps.state.users.find(function (u) {
+				if (hasValidId && Number(u.id) === numericId) return true;
+				if (!normalizedEmail) return false;
+				return deps.normalize(u.email) === normalizedEmail;
+			});
+			if (!target) return;
+
+			var currentUser = deps.getCurrentUser ? deps.getCurrentUser() : null;
+			var sameAsCurrent = currentUser && (
+				(Number.isFinite(numericId) && Number(currentUser.id) === numericId) ||
+				(normalizedEmail && deps.normalize(currentUser.email) === normalizedEmail)
+			);
+			if (sameAsCurrent) {
+				deps.toast("Không thể xóa tài khoản đang đăng nhập.", "warn");
+				return;
+			}
+
+			if (deps.normalize(target.role) === "admin") {
+				var adminCount = deps.state.users.filter(function (u) { return deps.normalize(u.role) === "admin"; }).length;
+				if (adminCount <= 1) {
+					deps.toast("Không thể xóa admin cuối cùng của hệ thống.", "warn");
+					return;
+				}
+			}
+
+			var label = target.name || target.email || (Number.isFinite(numericId) ? ("ID " + numericId) : "Tài khoản không định danh");
+			if (!window.confirm("Xác nhận xóa tài khoản: " + label + "?")) return;
+
+			deps.state.users = deps.state.users.filter(function (u) {
+				if (hasValidId && Number(u.id) === numericId) return false;
+				if (normalizedEmail && deps.normalize(u.email) === normalizedEmail) return false;
+				return true;
+			});
+
+			if (Number.isFinite(numericId) && deps.state.permissionTargetId && Number(deps.state.permissionTargetId) === numericId) deps.closePermissionModal();
+			if (Number.isFinite(numericId) && deps.state.userDetailTargetId && Number(deps.state.userDetailTargetId) === numericId) deps.closeUserDetailModal();
+			if (Number.isFinite(numericId) && deps.state.contactTargetId && Number(deps.state.contactTargetId) === numericId) deps.closeContactModal();
+
+			deps.persistAll();
+			deps.syncUsersToAuthStore();
+			deps.renderUsers();
+			deps.renderCompanyTable();
+			deps.renderKpis();
+			deps.toast("Đã xóa tài khoản " + label + ".", "success");
+			deps.addLog("Xóa tài khoản " + label, { module: "users" });
 		};
 	}
 
@@ -403,6 +458,7 @@
 		createCloseCompanyDetailModal: createCloseCompanyDetailModal,
 		createToggleCompanyStatus: createToggleCompanyStatus,
 		createRenderUsers: createRenderUsers,
+		createDeleteUser: createDeleteUser,
 		createToggleUserStatus: createToggleUserStatus,
 		createOpenUserDetailModal: createOpenUserDetailModal,
 		createCloseUserDetailModal: createCloseUserDetailModal,

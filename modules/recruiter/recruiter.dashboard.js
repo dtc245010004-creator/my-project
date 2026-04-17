@@ -959,6 +959,7 @@
       if (el.newJobTitle) el.newJobTitle.value = '';
       if (el.newJobSalary) el.newJobSalary.value = '';
       if (el.newJobDescription) el.newJobDescription.value = '';
+      if (el.newJobType) el.newJobType.value = 'fulltime';
       if (el.newJobLocation) el.newJobLocation.value = '';
       if (el.newJobRequirements) el.newJobRequirements.value = '';
       if (el.newJobMaxApplicants) el.newJobMaxApplicants.value = '';
@@ -985,6 +986,7 @@
         title: el.newJobTitle ? el.newJobTitle.value : '',
         salary: el.newJobSalary ? el.newJobSalary.value : '',
         description: el.newJobDescription ? el.newJobDescription.value : '',
+        type: el.newJobType ? el.newJobType.value : 'fulltime',
         location: el.newJobLocation ? el.newJobLocation.value : '',
         requirements: el.newJobRequirements ? el.newJobRequirements.value : '',
         maxApplicants: el.newJobMaxApplicants ? el.newJobMaxApplicants.value : '',
@@ -1139,9 +1141,9 @@
       updateStats();
 
       if (nextStatus === 'approved') {
-        showToast('Duyet ho so thanh cong.', 'success');
+        showToast('Duyệt hồ sơ thành công.', 'success');
       } else {
-        showToast('Da cap nhat trang thai ho so.', 'info');
+        showToast('Đã cập nhật trạng thái hồ sơ.', 'info');
       }
     }
 

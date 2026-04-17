@@ -270,7 +270,7 @@
 			company: recruiter.company || recruiter.name || 'Tech Corp',
 			salary: salary,
 			location: location,
-			type: 'fulltime',
+			type: payload.type || 'fulltime',
 			status: toOpenStatus('open'),
 			description: description,
 			requirements: requirements,

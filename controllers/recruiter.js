@@ -1,4 +1,4 @@
-(function () {
+(function () { // khởi tạo module recruiter bằng cách kết hợp các API từ các module con, đảm bảo tất cả module con đã được tải trước khi khởi tạo
   window.RecruiterModules = window.RecruiterModules || {};
 
   var coreModule = window.RecruiterModules.Core;
@@ -29,7 +29,7 @@
 
   window.RecruiterModule = deps;
 
-  function initRecruiterModule() {
+  function initRecruiterModule() { // khởi tạo module recruiter khi DOM sẵn sàng
     eventsApi.init();
   }
 
@@ -38,4 +38,23 @@
   } else {
     initRecruiterModule();
   }
+})();
+
+(function setupSupportWidget() { // thiết lập widget hỗ trợ trên tất cả các trang, nếu có phần tử tương ứng trong DOM
+  var widget = document.getElementById('supportWidget');
+  var toggle = document.getElementById('supportToggle');
+  if (!widget || !toggle) return;
+
+  toggle.addEventListener('click', function () {
+    var nextOpen = !widget.classList.contains('open');
+    widget.classList.toggle('open', nextOpen);
+    toggle.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+  });
+
+  document.addEventListener('click', function (event) {
+    if (!widget.classList.contains('open')) return;
+    if (widget.contains(event.target)) return;
+    widget.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  });
 })();

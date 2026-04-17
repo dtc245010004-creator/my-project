@@ -43,10 +43,12 @@
 
 					var action = btn.getAttribute("data-user-action");
 					var id = Number(btn.getAttribute("data-user-id"));
+					var email = btn.getAttribute("data-user-email") || "";
 
 					if (action === "toggle") deps.toggleUserStatus(id);
 					if (action === "detail") deps.openUserDetailModal(id);
 					if (action === "permission") deps.openPermissionModal(id);
+					if (action === "delete") deps.deleteUser(id, email);
 				});
 			}
 

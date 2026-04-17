@@ -1,6 +1,5 @@
 initializeData(false);
 
-var activeRole = 'candidate';
 var pendingPayload = null;
 
 var candidateBtn = document.getElementById('role-candidate');
@@ -16,7 +15,6 @@ var policyContent = document.getElementById('policy-content');
 var policyClose = document.getElementById('policy-close');
 
 function setRole(role) {
-  activeRole = role;
   var candidateActive = role === 'candidate';
 
   candidateForm.classList.toggle('hidden', !candidateActive);
@@ -173,7 +171,7 @@ recruiterForm.addEventListener('submit', function (e) {
 document.getElementById('otp-form').addEventListener('submit', function (e) {
   e.preventDefault();
   var otp = document.getElementById('otp-input').value.trim();
-  if (otp !== '123456') {
+  if (typeof Auth._lastOtp === 'function' && otp !== Auth._lastOtp()) {
     var otpErr = document.getElementById('otp-error');
     otpErr.textContent = 'OTP khong dung.';
     otpErr.classList.remove('hidden');
