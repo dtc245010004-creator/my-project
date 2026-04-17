@@ -652,6 +652,290 @@
       line-height: 1.45;
     }
 
+    .settings-shell {
+      display: grid;
+      gap: 12px;
+    }
+
+    .settings-shell-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: start;
+      flex-wrap: wrap;
+    }
+
+    .settings-shell-head h2 {
+      font-size: 22px;
+      color: #12305f;
+      line-height: 1.15;
+      margin-bottom: 4px;
+    }
+
+    .settings-shell-head p {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .settings-shell-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .settings-banner {
+      border: 1px solid #d9e7fb;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #f0f6ff 0%, #ffffff 100%);
+      color: #1d4ed8;
+      padding: 10px 12px;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .settings-card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .settings-card {
+      border: 1px solid #d9e3f6;
+      border-radius: 12px;
+      background: #fff;
+      min-height: 64px;
+      padding: 10px 12px;
+      display: grid;
+      gap: 4px;
+      box-shadow: 0 8px 18px rgba(30, 64, 175, 0.06);
+    }
+
+    .settings-card label {
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+    }
+
+    .settings-card strong {
+      font-size: 15px;
+      color: #0f274f;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+
+    .settings-card input {
+      border: none;
+      background: transparent;
+      padding: 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: #0f274f;
+      outline: none;
+      width: 100%;
+    }
+
+    .settings-card input::placeholder {
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .settings-card input:focus {
+      box-shadow: none;
+      border: none;
+    }
+
+    .settings-password-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .settings-password-grid .field {
+      border: 1px solid #d9e3f6;
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px 12px;
+      box-shadow: 0 8px 18px rgba(30, 64, 175, 0.06);
+    }
+
+    .settings-password-grid .field input {
+      border: none;
+      background: transparent;
+      padding: 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: #0f274f;
+    }
+
+    .settings-password-grid .field input:focus {
+      box-shadow: none;
+    }
+
+    .settings-help {
+      border: 1px solid #d9e7fb;
+      border-radius: 12px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      padding: 10px 12px;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .settings-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .settings-actions .btn {
+      min-width: 0;
+    }
+
+    .settings-summary {
+      display: grid;
+      gap: 10px;
+    }
+
+    .settings-summary-card {
+      border: 1px solid #d9e3f6;
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px 12px;
+      box-shadow: 0 8px 18px rgba(30, 64, 175, 0.06);
+    }
+
+    .settings-summary-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 10px;
+    }
+
+    .settings-summary-card label {
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .settings-summary-card strong {
+      font-size: 15px;
+      color: #0f274f;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+
+    .settings-edit-panel {
+      display: none;
+      border-top: 1px solid #d9e7fb;
+      padding-top: 12px;
+      gap: 10px;
+    }
+
+    .settings-edit-panel.open {
+      display: grid;
+    }
+
+    .settings-inline-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .account-modal-body {
+      display: grid;
+      gap: 12px;
+    }
+
+    .account-summary {
+      border: 1px solid #cfe0ff;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #eff6ff, #f8fbff);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .account-summary-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .account-summary-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #12305f;
+      line-height: 1.2;
+    }
+
+    .account-summary-subtitle {
+      color: #5b6f93;
+      font-size: 13px;
+      line-height: 1.45;
+      max-width: 460px;
+    }
+
+    .account-summary-chip {
+      border-radius: 999px;
+      border: 1px solid #bfdbfe;
+      background: #dbeafe;
+      color: #1d4ed8;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .account-section {
+      border: 1px solid #e2e8f5;
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .account-section h4 {
+      font-size: 14px;
+      font-weight: 800;
+      color: #12305f;
+      margin-bottom: 2px;
+    }
+
+    .account-section p {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.45;
+    }
+
+    .account-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field.span-2 {
+      grid-column: span 2;
+    }
+
+    .field-help {
+      margin-top: 5px;
+      font-size: 11px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
     .cv-stats {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1046,11 +1330,22 @@
       min-height: 90px;
     }
 
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    }
+
     .modal-actions {
       padding: 0 14px 14px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
+    }
+
+    .modal-actions .btn {
+      min-width: 140px;
     }
 
 
@@ -1626,6 +1921,93 @@
         </article>
       </section>
 
+      <section class="view-section" id="view-settings">
+        <article class="panel settings-shell">
+          <div class="settings-shell-head">
+            <div>
+              <h2>Cài đặt tài khoản</h2>
+              <p>Quản lý thông tin candidate và thao tác chỉnh sửa ngay trong khu vực này.</p>
+            </div>
+            <div class="settings-shell-actions">
+              <button id="openAccountEditBtn" class="btn btn-logout" type="button">Chỉnh sửa thông tin</button>
+            </div>
+          </div>
+
+          <div class="settings-banner">
+            Xem thông tin hiện tại bên dưới. Bấm “Chỉnh sửa thông tin” để mở form cập nhật.
+          </div>
+
+          <div class="settings-summary">
+            <div class="settings-summary-grid">
+              <div class="settings-summary-card">
+                <label>Họ và tên</label>
+                <strong id="accountNameDisplay">Candidate Demo</strong>
+              </div>
+              
+              <div class="settings-summary-card">
+                <label>Email đăng nhập</label>
+                <strong id="accountEmailDisplay">candidate@email.com</strong>
+              </div>
+
+              <div class="settings-summary-card">
+                <label>Số điện thoại</label>
+                <strong id="accountPhoneDisplay">-</strong>
+              </div>
+            </div>
+
+            <div class="settings-edit-panel" id="accountEditPanel">
+              <div class="settings-help">
+                Nếu chỉ muốn đổi thông tin liên hệ, bạn không cần nhập mật khẩu mới. Mật khẩu mới chỉ được kiểm tra khi có thay đổi.
+              </div>
+
+              <div class="settings-card-grid">
+                <div class="settings-card">
+                  <label for="accountName">Họ và tên</label>
+                  <input id="accountName" type="text" placeholder="Nhập họ và tên" />
+                </div>
+
+                <div class="settings-card">
+                  <label for="accountEmail">Email đăng nhập</label>
+                  <input id="accountEmail" type="email" placeholder="name@example.com" />
+                </div>
+
+                <div class="settings-card">
+                  <label for="accountPhone">Số điện thoại</label>
+                  <input id="accountPhone" type="tel" placeholder="Nhập số điện thoại" />
+                </div>
+
+                <div class="settings-card">
+                  <label for="accountCurrentPassword">Mật khẩu hiện tại</label>
+                  <input id="accountCurrentPassword" type="password" placeholder="Nhập mật khẩu hiện tại" />
+                </div>
+              </div>
+
+              <div class="settings-password-grid">
+                <div class="field">
+                  <label for="accountNewPassword">Mật khẩu mới</label>
+                  <input id="accountNewPassword" type="password" placeholder="Để trống nếu không đổi mật khẩu" />
+                </div>
+
+                <div class="field">
+                  <label for="accountConfirmPassword">Xác nhận mật khẩu mới</label>
+                  <input id="accountConfirmPassword" type="password" placeholder="Nhập lại mật khẩu mới" />
+                </div>
+
+                <div class="field">
+                  <label>Trạng thái</label>
+                  <input type="text" value="Đang đăng nhập" readonly />
+                </div>
+              </div>
+
+              <div class="settings-inline-actions">
+                <button id="accountSettingsCancel" class="btn btn-light" type="button">Hủy</button>
+                <button id="accountSettingsSave" class="btn btn-logout" type="button">Lưu thay đổi</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
       <footer class="footer">Chính sách và Liên hệ: Nguyễn Văn Tiến | Hotline: 0374476206.</footer>
     </main>
   </div>
@@ -1857,56 +2239,6 @@
     </div>
   </div>
 
-  <div id="accountSettingsBackdrop" class="modal-backdrop">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="accountSettingsTitle">
-      <div class="modal-head">
-        <h3 id="accountSettingsTitle">Cài đặt tài khoản</h3>
-        <button id="accountSettingsClose" class="modal-close" type="button">×</button>
-      </div>
-
-      <div class="modal-body">
-        <div class="settings-note">
-          Cập nhật thông tin cá nhân, email, số điện thoại và mật khẩu tại đây. Mọi thay đổi sẽ được lưu ngay vào tài khoản đang đăng nhập.
-        </div>
-
-        <div class="field">
-          <label for="accountName">Họ và tên</label>
-          <input id="accountName" type="text" placeholder="Nhập họ và tên" />
-        </div>
-
-        <div class="field">
-          <label for="accountEmail">Email đăng nhập</label>
-          <input id="accountEmail" type="email" placeholder="name@example.com" />
-        </div>
-
-        <div class="field">
-          <label for="accountPhone">Số điện thoại</label>
-          <input id="accountPhone" type="tel" placeholder="Nhập số điện thoại" />
-        </div>
-
-        <div class="field">
-          <label for="accountCurrentPassword">Mật khẩu hiện tại</label>
-          <input id="accountCurrentPassword" type="password" placeholder="Nhập mật khẩu hiện tại" />
-        </div>
-
-        <div class="field">
-          <label for="accountNewPassword">Mật khẩu mới</label>
-          <input id="accountNewPassword" type="password" placeholder="Để trống nếu không đổi mật khẩu" />
-        </div>
-
-        <div class="field">
-          <label for="accountConfirmPassword">Xác nhận mật khẩu mới</label>
-          <input id="accountConfirmPassword" type="password" placeholder="Nhập lại mật khẩu mới" />
-        </div>
-      </div>
-
-      <div class="modal-actions">
-        <button id="accountSettingsCancel" class="btn btn-light" type="button">Hủy</button>
-        <button id="accountSettingsSave" class="btn" style="background:#1d4ed8;color:#fff;" type="button">Lưu thay đổi</button>
-      </div>
-    </div>
-  </div>
-
   <div id="notificationBackdrop" class="modal-backdrop">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="notificationTitle">
       <div class="modal-head">
@@ -1931,12 +2263,12 @@
         <a class="support-icon support-icon--teal" href="https://t.me" target="_blank" rel="noopener noreferrer" aria-label="Telegram">&#128276;</a>
       </div>
       <div class="support-item">
-        <a class="support-label support-label--blue" href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">Facebook Page</a>
-        <a class="support-icon support-icon--blue" href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>
+        <a class="support-label support-label--blue" href="https://www.facebook.com/share/1BCpPhNKzY/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">Facebook Page</a>
+        <a class="support-icon support-icon--blue" href="https://www.facebook.com/share/1BCpPhNKzY/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>
       </div>
       <div class="support-item">
-        <a class="support-label support-label--indigo" href="https://m.me" target="_blank" rel="noopener noreferrer">Chat Messenger</a>
-        <a class="support-icon support-icon--indigo" href="https://m.me" target="_blank" rel="noopener noreferrer" aria-label="Messenger">&#9993;</a>
+        <a class="support-label support-label--indigo" href="#" target="_blank" rel="noopener noreferrer">Chat Messenger</a>
+        <a class="support-icon support-icon--indigo" href="#" target="_blank" rel="noopener noreferrer" aria-label="Messenger">&#9993;</a>
       </div>
     </div>
     <button class="support-toggle" id="supportToggle" type="button" aria-expanded="false" aria-controls="supportList" aria-label="Bật tắt hỗ trợ">
@@ -1970,6 +2302,12 @@
   <script src="../Data/data-init.js"></script>
   <script src="../controllers/auth.js"></script>
   <script src="../controllers/cv.js"></script>
+  <script src="../modules/candidate/candidate.storage.js"></script>
+  <script src="../modules/candidate/candidate.core.js"></script>
+  <script src="../modules/candidate/candidate.notifications.js"></script>
+  <script src="../modules/candidate/candidate.cvprofile.js"></script>
+  <script src="../modules/candidate/candidate.jobs.js"></script>
+  <script src="../modules/candidate/candidate.events.js"></script>
   <script src="../controllers/candidate.js"></script>
 </body>
 </html>
