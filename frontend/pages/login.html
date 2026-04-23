@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập - Job Portal Platform</title>
+  <link rel="icon" type="image/jpeg" href="../assets/images/logo1.jpg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="stylesheet" href="../css/login.css">
+</head>
+<body class="auth-page px-4 py-8">
+  <div class="auth-shell mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-md items-center justify-center">
+    <div class="auth-card w-full rounded-[28px] p-8 sm:p-9">
+      <div class="auth-logo mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-white">
+        <img src="../assets/images/logo1.jpg" alt="Job Portal logo" class="h-14 w-14 rounded-xl object-cover">
+      </div>
+
+      <div class="text-center">
+        <h1 class="auth-title text-4xl font-extrabold text-slate-900">Job Portal</h1>
+        <p class="mt-2 text-sm text-slate-600">Tìm công việc mơ ước của bạn</p>
+      </div>
+
+      <form id="login-form" class="mt-7 space-y-4" novalidate>
+        <div>
+          <label for="login-email" class="auth-label block">Email</label>
+          <input id="login-email" type="email" class="auth-input mt-2 w-full rounded-xl px-4 py-2.5 text-slate-800 placeholder-slate-400" placeholder="Nhập email của bạn" required>
+          <p id="err-email" class="mt-1 text-sm text-red-600 hidden"></p>
+        </div>
+
+        <div>
+          <label for="login-password" class="auth-label block">Mật khẩu</label>
+          <div class="relative mt-2">
+            <input id="login-password" type="password" class="auth-input w-full rounded-xl px-4 py-2.5 pr-12 text-slate-800 placeholder-slate-400" placeholder="Nhập mật khẩu" required>
+            <button id="toggle-login-password" type="button" class="absolute inset-y-0 right-3 my-auto h-8 rounded-md px-2 text-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-700" aria-label="Hiển thị mật khẩu" aria-pressed="false">👁</button>
+          </div>
+          <p id="err-password" class="mt-1 text-sm text-red-600 hidden"></p>
+        </div>
+
+        <div class="flex items-center justify-between text-sm">
+          <label class="flex items-center gap-2 text-slate-700">
+            <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-fuchsia-600 focus:ring-fuchsia-500">
+            <span>Ghi nhớ tôi</span>
+          </label>
+          <button id="forgot-password-link" class="auth-link" type="button">Quên mật khẩu?</button>
+        </div>
+
+        <button id="btn-login" type="submit" class="auth-button w-full rounded-xl bg-gradient-to-r from-pink-500 to-indigo-500 py-3 text-base font-bold text-white">
+          Đăng Nhập
+        </button>
+      </form>
+
+      <div class="auth-panel mt-6 rounded-2xl p-4 text-xs text-slate-700">
+        <p class="mb-2 font-semibold">Tài khoản test:</p>
+        <p>admin@jobportalplatform.vn / Adm!n2026#Portal</p>
+        <p>recruiter@company.com / Recruiter#2026!Job</p>
+        <p>candidate@email.com / Cand!date2026#Job</p>
+      </div>
+
+      <div class="mt-5 text-center text-sm text-slate-600">
+        Chưa có tài khoản?
+        <a href="register.html" class="auth-link">Đăng ký ngay</a>
+      </div>
+
+      <div class="mt-2 text-center text-xs text-slate-600">
+        Tài khoản chưa kích hoạt?
+        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 hover:underline">Facebook Admin</a>
+        |
+        <a href="https://zalo.me" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 hover:underline">Zalo Admin</a>
+      </div>
+
+      <div class="mt-5 border-t border-violet-200 pt-4 text-sm leading-6 text-slate-600">
+        Bằng cách đăng nhập, bạn đồng ý với
+        <button id="terms-link" type="button" class="auth-link">Điều khoản sử dụng</button>
+        và
+        <button id="privacy-link" type="button" class="auth-link">Chính sách bảo mật</button>
+        của chúng tôi.
+      </div>
+    </div>
+  </div>
+
+  <div id="forgot-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+    <div class="auth-modal-card w-full max-w-md rounded-2xl bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-800">Khôi phục mật khẩu</h2>
+
+      <form id="forgot-step-1" class="mt-4 space-y-3">
+        <p class="text-sm text-slate-600">Bước 1: Nhập email để nhận OTP</p>
+        <input id="fp-email" type="email" class="w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="Nhập email" required>
+        <p id="fp-err-1" class="text-sm text-red-600 hidden"></p>
+        <div class="flex gap-3">
+          <button type="submit" class="flex-1 rounded-lg bg-blue-600 py-2 text-white font-semibold">Gửi mã</button>
+          <button type="button" id="fp-close-1" class="flex-1 rounded-lg bg-slate-200 py-2 font-semibold text-slate-700">Đóng</button>
+        </div>
+      </form>
+
+      <form id="forgot-step-2" class="mt-4 space-y-3 hidden">
+        <p class="text-sm text-slate-600">Bước 2: Nhập OTP và mật khẩu mới</p>
+        <input id="fp-otp" type="text" maxlength="6" class="w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="Nhập OTP (123456)" required>
+        <input id="fp-new-password" type="password" class="w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="Mật khẩu mới" required>
+        <p id="fp-err-2" class="text-sm text-red-600 hidden"></p>
+        <div class="flex gap-3">
+          <button type="submit" class="flex-1 rounded-lg bg-blue-600 py-2 text-white font-semibold">Cập nhật</button>
+          <button type="button" id="fp-close-2" class="flex-1 rounded-lg bg-slate-200 py-2 font-semibold text-slate-700">Đóng</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="policy-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+    <div class="auth-modal-card w-full max-w-lg rounded-2xl bg-white p-6">
+      <div class="flex items-start justify-between gap-3">
+        <h2 id="policy-title" class="text-xl font-bold text-slate-800">Điều khoản sử dụng</h2>
+        <button id="policy-close" type="button" class="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-semibold text-slate-600 hover:bg-slate-50">Đóng</button>
+      </div>
+      <div id="policy-content" class="mt-4 max-h-72 overflow-y-auto text-sm leading-6 text-slate-700"></div>
+    </div>
+  </div>
+<script src="../../backend/Data/data-init.js"></script>
+  <script src="../../backend/Controllers/auth.js"></script>
+  <script src="../../backend/Controllers/login.js"></script>
+</body>
+</html>

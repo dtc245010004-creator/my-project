@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Candidate Dashboard - Job Portal Platform</title>
+  <link rel="icon" type="image/jpeg" href="../assets/images/logo1.jpg">
+  <link rel="stylesheet" href="../css/candidate.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand"><img src="../assets/images/logo1.jpg" alt="Job Portal logo"><span>Job Portal Platform</span></div>
+
+      <div class="profile">
+        <div class="avatar" id="sidebarAvatar">NA</div>
+        <div>
+          <div class="name" id="sidebarUserName">Candidate User</div>
+          <div class="role">Ứng viên</div>
+        </div>
+      </div>
+
+      <ul class="menu">
+        <li><a class="active" href="#" data-view="jobs"><span>⌕</span><span>Tìm việc làm</span></a></li>
+        <li><a href="#" data-view="cv"><span>▣</span><span>Quản lý hồ sơ CV</span></a></li>
+        <li><a href="#" data-view="history"><span>◷</span><span>Lịch sử ứng tuyển</span></a></li>
+        <li><a href="#" data-view="favorites"><span>♡</span><span>Job yêu thích</span></a></li>
+        <li><a href="#" data-view="policy"><span>ℹ</span><span>Chính sách và Liên hệ</span></a></li>
+        <li><a href="#" data-view="settings"><span>⚙</span><span>Cài đặt tài khoản</span></a></li>
+      </ul>
+
+      <button id="logoutBtn" class="btn btn-logout" type="button">Đăng xuất</button>
+    </aside>
+
+    <main class="main">
+      <section class="topbar">
+        <div class="search-row">
+          <div class="search">
+            <input id="searchInput" type="text" placeholder="Tìm theo tên công ty hoặc tên job..." />
+            <span>⌕</span>
+          </div>
+          <select id="jobFilter">
+            <option value="all">Tất cả</option>
+            <option value="active">Đang mở</option>
+            <option value="closed">Đã đóng</option>
+          </select>
+        </div>
+
+        <div class="top-actions">
+          
+          <button id="candidateNotificationBtn" class="btn btn-light" type="button">Thông báo <span id="candidateNotificationCount">(0)</span></button>
+        </div>
+      </section>
+
+      <section class="kpis">
+        <article class="kpi">
+          <div class="icon">V</div>
+          <div>
+            <div class="title">Job đã nộp</div>
+            <div class="value" id="appliedCount">0</div>
+          </div>
+        </article>
+        <article class="kpi">
+          <div class="icon">H</div>
+          <div>
+            <div class="title">Job đã lưu</div>
+            <div class="value" id="savedCount">0</div>
+          </div>
+        </article>
+        <article class="kpi">
+          <div class="icon">P</div>
+          <div>
+            <div class="title">Phỏng vấn</div>
+            <div class="value" id="interviewCount">2</div>
+          </div>
+        </article>
+      </section>
+
+      <section class="view-section active" id="view-jobs">
+        <div class="grid">
+        <article class="panel">
+          <h2>Danh sách job</h2>
+          <div class="job-list" id="jobList"></div>
+        </article>
+
+        <article class="panel">
+          <h2>Hoạt động gần đây</h2>
+          <ul class="timeline" id="timeline">
+            <li>Bạn đã cập nhật CV <small>08:30 - Hôm nay</small></li>
+            <li>Nhà tuyển dụng đã xem hồ sơ của bạn <small>16:10 - Hôm qua</small></li>
+          </ul>
+        </article>
+        </div>
+      </section>
+
+      <section class="view-section" id="view-cv">
+        <article class="panel">
+          <h2>Quản lý CV nhanh</h2>
+          <div class="cv-workspace">
+            <div class="cv-toolbar">
+              <div class="cv-input-wrap">
+                <span class="cv-input-icon">CV</span>
+                <input id="newCvName" class="cv-input" type="text" placeholder="Đặt tên CV chuyên nghiệp (ví dụ: Frontend-ATS-2026)" />
+              </div>
+              <!-- CV actions -->
+              <div class="cv-actions">
+                <button id="createCvBtn" class="btn btn-cv-primary" type="button">+ Tạo CV mới</button>
+                <label class="cv-upload-wrap" for="cvUploadInput">Tải CV (.pdf/.docx)
+                  <input id="cvUploadInput" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+                </label>
+              </div>
+            </div>
+
+            <div class="cv-guide">Mẹo: Đặt 1 CV mặc định để hệ thống tự động chọn khi bạn ứng tuyển việc làm.</div>
+            <div id="cvUploadMessage" class="cv-status-note"></div>
+
+            <div class="cv-stats">
+              <div class="cv-stat">
+                <small>Tổng CV</small>
+                <strong id="cvTotalStat">0</strong >
+              </div>
+              <div class="cv-stat">
+                <small>CV mặc định</small>
+                <strong id="cvDefaultStat">Chưa đặt</strong>
+              </div>
+              <div class="cv-stat">
+                <small>Cập nhật gần nhất</small>
+                <strong id="cvLatestStat">--</strong>
+              </div>
+            </div>
+
+            <ul id="cvList" class="cv-list"></ul>
+          </div>
+        </article>
+      </section>
+
+      <section class="view-section" id="view-history">
+        <article class="panel">
+          <h2>Lịch sử ứng tuyển</h2>
+          <div class="history-toolbar">
+            <input id="historySearchInput" class="history-search" type="text" placeholder="Tìm theo tên công ty hoặc tên job..." />
+            <input id="historyDateFilter" class="history-date" type="date" />
+          </div>
+          <ul id="historyList" class="history-list"></ul>
+        </article>
+      </section>
+
+      <section class="view-section" id="view-favorites">
+        <article class="panel">
+          <h2>Danh sách job yêu thích</h2>
+          <ul id="favoriteList" class="favorite-list"></ul>
+        </article>
+      </section>
+
+      <section class="view-section" id="view-policy">
+        <article class="panel">
+          <h2>Chính sách và Liên hệ</h2>
+          <ul class="simple-list">
+            <li>Mọi thông tin cá nhân được bảo mật theo chính sách hệ thống.</li>
+            <li>Hỗ trợ ứng viên: Nguyễn Văn Tiến  | Hotline: 0374476206.</li>
+            <li>Vui lòng báo cáo nội dung vi phạm qua bộ phận hỗ trợ.</li>
+          </ul>
+
+          <div class="contact-box" style="margin-top:14px;display:grid;gap:10px;">
+            <div class="settings-note">Gửi liên hệ cho admin nếu bạn gặp lỗi kỹ thuật, cần hỗ trợ tài khoản hoặc muốn báo cáo nội dung.</div>
+            <div class="field">
+              <label for="candidateContactTitle">Tiêu đề liên hệ</label>
+              <input id="candidateContactTitle" type="text" placeholder="Ví dụ: Báo lỗi khi nộp hồ sơ" />
+            </div>
+            <div class="field">
+              <label for="candidateContactContent">Nội dung</label>
+              <textarea id="candidateContactContent" placeholder="Mô tả chi tiết vấn đề bạn đang gặp..."></textarea>
+            </div>
+            <button id="candidateContactSend" class="btn btn-light" type="button" style="justify-self:start;">Gửi liên hệ</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="view-section" id="view-settings">
+        <article class="panel settings-shell">
+          <div class="settings-shell-head">
+            <div>
+              <h2>Cài đặt tài khoản</h2>
+              <p>Quản lý thông tin candidate và thao tác chỉnh sửa ngay trong khu vực này.</p>
+            </div>
+            <div class="settings-shell-actions">
+              <button id="openAccountEditBtn" class="btn btn-logout" type="button">Chỉnh sửa thông tin</button>
+            </div>
+          </div>
+
+          <div class="settings-banner">
+            Xem thông tin hiện tại bên dưới. Bấm “Chỉnh sửa thông tin” để mở form cập nhật.
+          </div>
+
+          <div class="settings-summary">
+            <div class="settings-summary-grid">
+              <div class="settings-summary-card">
+                <label>Họ và tên</label>
+                <strong id="accountNameDisplay">Candidate Demo</strong>
+              </div>
+
+              <div class="settings-summary-card">
+                <label>Email đăng nhập</label>
+                <strong id="accountEmailDisplay">candidate@email.com</strong>
+              </div>
+
+              <div class="settings-summary-card">
+                <label>Số điện thoại</label>
+                <strong id="accountPhoneDisplay">-</strong>
+              </div>
+            </div>
+
+            <div class="settings-edit-panel" id="accountEditPanel">
+              <div class="settings-help">
+                Nếu chỉ muốn đổi thông tin liên hệ, bạn không cần nhập mật khẩu mới. Mật khẩu mới chỉ được kiểm tra khi có thay đổi.
+              </div>
+
+              <div class="settings-card-grid">
+                <div class="settings-card">
+                  <label for="accountName">Họ và tên</label>
+                  <input id="accountName" type="text" placeholder="Nhập họ và tên" />
+                </div>
+
+                <div class="settings-card">
+                  <label for="accountEmail">Email đăng nhập</label>
+                  <input id="accountEmail" type="email" placeholder="name@example.com" />
+                </div>
+
+                <div class="settings-card">
+                  <label for="accountPhone">Số điện thoại</label>
+                  <input id="accountPhone" type="tel" placeholder="Nhập số điện thoại" />
+                </div>
+
+                <div class="settings-card">
+                  <label for="accountCurrentPassword">Mật khẩu hiện tại</label>
+                  <input id="accountCurrentPassword" type="password" placeholder="Nhập mật khẩu hiện tại" />
+                </div>
+              </div>
+
+              <div class="settings-password-grid">
+                <div class="field">
+                  <label for="accountNewPassword">Mật khẩu mới</label>
+                  <input id="accountNewPassword" type="password" placeholder="Để trống nếu không đổi mật khẩu" />
+                </div>
+
+                <div class="field">
+                  <label for="accountConfirmPassword">Xác nhận mật khẩu mới</label>
+                  <input id="accountConfirmPassword" type="password" placeholder="Nhập lại mật khẩu mới" />
+                </div>
+
+                <div class="field">
+                  <label>Trạng thái</label>
+                  <input type="text" value="Đang đăng nhập" readonly />
+                </div>
+              </div>
+
+              <div class="settings-inline-actions">
+                <button id="accountSettingsCancel" class="btn btn-light" type="button">Hủy</button>
+                <button id="accountSettingsSave" class="btn btn-logout" type="button">Lưu thay đổi</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <footer class="footer">Chính sách và Liên hệ: Nguyễn Văn Tiến | Hotline: 0374476206.</footer>
+    </main>
+  </div>
+
+  <div id="applyModalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="applyModalTitle">
+      <div class="modal-head">
+        <h3 id="applyModalTitle">Nộp đơn ứng tuyển</h3>
+        <button id="applyModalClose" class="modal-close" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="field">
+          <label for="applyJobTitle">Công việc</label>
+          <input id="applyJobTitle" type="text" readonly />
+        </div>
+
+        <div class="field">
+          <label for="applyCvSelect">Chọn CV</label>
+          <select id="applyCvSelect">
+            <option value="">-- Chọn CV --</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="applyMessage">Lời nhắn</label>
+          <textarea id="applyMessage" placeholder="Tôi quan tâm vị trí này vì..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="applyCancelBtn" class="btn btn-light" type="button">Hủy</button>
+        <button id="applyConfirmBtn" class="btn" style="background:var(--success);color:#fff;" type="button">Gửi ứng tuyển</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="jobDetailBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="jobDetailTitle">
+      <div class="modal-head">
+        <h3 id="jobDetailTitle">Chi tiết tin tuyển dụng</h3>
+        <button id="jobDetailClose" class="modal-close" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-grid">
+          <div class="field">
+            <label for="jobDetailName">Tên vị trí</label>
+            <input id="jobDetailName" type="text" readonly />
+          </div>
+
+          <div class="field">
+            <label for="jobDetailCompany">Công ty</label>
+            <input id="jobDetailCompany" type="text" readonly />
+          </div>
+
+          <div class="field">
+            <label for="jobDetailSalary">Mức lương</label>
+            <input id="jobDetailSalary" type="text" readonly />
+          </div>
+
+          <div class="field">
+            <label for="jobDetailLocation">Địa điểm</label>
+            <input id="jobDetailLocation" type="text" readonly />
+          </div>
+
+          <div class="field full">
+            <label for="jobDetailRequirements">Yêu cầu (tóm tắt)</label>
+            <textarea id="jobDetailRequirements" readonly></textarea>
+          </div>
+
+          <div class="field">
+            <label for="jobDetailMaxApplicants">Số lượng hồ sơ nhận tối đa</label>
+            <input id="jobDetailMaxApplicants" type="text" readonly />
+          </div>
+
+          <div class="field">
+            <label for="jobDetailType">Hình thức làm việc</label>
+            <input id="jobDetailType" type="text" readonly />
+          </div>
+
+          <div class="field">
+            <label for="jobDetailStatus">Trạng thái</label>
+            <input id="jobDetailStatus" type="text" readonly />
+          </div>
+
+          <div class="field">
+            <label for="jobDetailPostedDate">Ngày đăng</label>
+            <input id="jobDetailPostedDate" type="text" readonly />
+          </div>
+
+          <div class="field full">
+            <label for="jobDetailDescription">Mô tả công việc</label>
+            <textarea id="jobDetailDescription" readonly></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="jobDetailCloseBtn" class="btn btn-light" type="button">Đóng</button>
+        <button id="jobDetailApplyBtn" class="btn" style="background:var(--success);color:#fff;" type="button">Ứng tuyển ngay</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="recruiterFeedbackBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="recruiterFeedbackTitle">
+      <div class="modal-head">
+        <h3 id="recruiterFeedbackTitle">Phản hồi từ nhà tuyển dụng</h3>
+        <button id="recruiterFeedbackClose" class="modal-close" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="field">
+          <label for="feedbackJobName">Vị trí</label>
+          <input id="feedbackJobName" type="text" readonly />
+        </div>
+
+        <div class="field">
+          <label for="feedbackCompany">Công ty</label>
+          <input id="feedbackCompany" type="text" readonly />
+        </div>
+
+        <div class="field">
+          <label for="feedbackStatus">Trạng thái xử lý</label>
+          <input id="feedbackStatus" type="text" readonly />
+        </div>
+
+        <div class="field">
+          <label for="feedbackMessage">Nội dung phản hồi</label>
+          <textarea id="feedbackMessage" readonly></textarea>
+        </div>
+
+        <div class="field">
+          <label for="feedbackInterview">Thông tin phỏng vấn</label>
+          <textarea id="feedbackInterview" readonly></textarea>
+        </div>
+
+        <div class="field">
+          <label for="feedbackUpdatedAt">Cập nhật lúc</label>
+          <input id="feedbackUpdatedAt" type="text" readonly />
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="recruiterFeedbackCloseBtn" class="btn btn-light" type="button">Đóng</button>
+        <button id="recruiterFeedbackApplyBtn" class="btn" style="background:var(--success);color:#fff;" type="button">Ứng tuyển vị trí khác</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="cvPreviewBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="cvPreviewTitle">
+      <div class="modal-head">
+        <h3 id="cvPreviewTitle">Xem nhanh CV</h3>
+        <button id="cvPreviewClose" class="modal-close" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="field">
+          <label for="cvPreviewName">Tên CV</label>
+          <input id="cvPreviewName" type="text" readonly />
+        </div>
+
+        <div class="field">
+          <label for="cvPreviewCandidate">Ứng viên</label>
+          <input id="cvPreviewCandidate" type="text" readonly />
+        </div>
+
+        <div class="field">
+          <label for="cvPreviewPosition">Vị trí hướng đến</label>
+          <input id="cvPreviewPosition" type="text" readonly />
+        </div>
+
+        <div class="field">
+          <label for="cvPreviewSkills">Kỹ năng chính</label>
+          <textarea id="cvPreviewSkills" readonly></textarea>
+        </div>
+
+        <div class="field">
+          <label for="cvPreviewSummary">Tóm tắt</label>
+          <textarea id="cvPreviewSummary" readonly></textarea>
+        </div>
+
+        <div class="field">
+          <label for="cvPreviewUpdated">Cập nhật</label>
+          <input id="cvPreviewUpdated" type="text" readonly />
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="cvPreviewCloseBtn" class="btn btn-light" type="button">Đóng</button>
+        <button id="cvPreviewDownloadBtn" class="btn" style="background:#1d4ed8;color:#fff;" type="button">Tải CV</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="cvEditBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="cvEditTitle">
+      <div class="modal-head">
+        <h3 id="cvEditTitle">Sửa CV</h3>
+        <button id="cvEditClose" class="modal-close" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="field">
+          <label for="cvEditName">Tên CV</label>
+          <input id="cvEditName" type="text" placeholder="Nhập tên CV" />
+        </div>
+
+        <div class="field">
+          <label for="cvEditPosition">Vị trí hướng đến</label>
+          <input id="cvEditPosition" type="text" placeholder="Ví dụ: Frontend Developer" />
+        </div>
+
+        <div class="field">
+          <label for="cvEditSkills">Kỹ năng chính</label>
+          <textarea id="cvEditSkills" placeholder="Mỗi kỹ năng một dòng"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="cvEditSummary">Tóm tắt</label>
+          <textarea id="cvEditSummary" placeholder="Tóm tắt ngắn về CV của bạn"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="cvEditCancel" class="btn btn-light" type="button">Hủy</button>
+        <button id="cvEditSave" class="btn" style="background:#1d4ed8;color:#fff;" type="button">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="notificationBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="notificationTitle">
+      <div class="modal-head">
+        <h3 id="notificationTitle">Thông báo của bạn</h3>
+        <button id="notificationClose" class="modal-close" type="button">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-note">Các phản hồi từ admin, trạng thái liên hệ và ghi chú xử lý sẽ xuất hiện tại đây.</div>
+        <div id="notificationList" style="display:grid;gap:8px;max-height:320px;overflow:auto;"></div>
+      </div>
+      <div class="modal-actions">
+        <button id="notificationMarkRead" class="btn btn-light" type="button">Đánh dấu đã đọc</button>
+        <button id="notificationCloseBtn" class="btn btn-logout" type="button">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="support-widget" id="supportWidget">
+    <div class="support-list" id="supportList">
+      <div class="support-item">
+        <a class="support-label support-label--teal" href="https://t.me" target="_blank" rel="noopener noreferrer">Kênh Telegram</a>
+        <a class="support-icon support-icon--teal" href="https://t.me" target="_blank" rel="noopener noreferrer" aria-label="Telegram">&#128276;</a>
+      </div>
+      <div class="support-item">
+        <a class="support-label support-label--blue" href="https://www.facebook.com/share/1BCpPhNKzY/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">Facebook Page</a>
+        <a class="support-icon support-icon--blue" href="https://www.facebook.com/share/1BCpPhNKzY/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>
+      </div>
+      <div class="support-item">
+        <a class="support-label support-label--indigo" href="#" target="_blank" rel="noopener noreferrer">Chat Messenger</a>
+        <a class="support-icon support-icon--indigo" href="#" target="_blank" rel="noopener noreferrer" aria-label="Messenger">&#9993;</a>
+      </div>
+    </div>
+    <button class="support-toggle" id="supportToggle" type="button" aria-expanded="false" aria-controls="supportList" aria-label="Bật tắt hỗ trợ">
+      <span class="support-fab-label">Hỗ trợ</span>
+      <span class="support-open"><img class="support-avatar" src="../assets/images/soi-co-doc-xe-ao-meme-1.webp" alt="Avatar hỗ trợ"></span>
+      <span class="support-close">&#10005;</span>
+    </button>
+  </div>
+
+
+  <script src="../../backend/Data/data-init.js"></script>
+  <script src="../../backend/Controllers/auth.js"></script>
+  <script src="../../backend/Controllers/cv.js"></script>
+  <script src="../../backend/Modules/candidate/candidate.storage.js"></script>
+  <script src="../../backend/Modules/candidate/candidate.core.js"></script>
+  <script src="../../backend/Modules/candidate/candidate.notifications.js"></script>
+  <script src="../../backend/Modules/candidate/candidate.cvprofile.js"></script>
+  <script src="../../backend/Modules/candidate/candidate.jobs.js"></script>
+  <script src="../../backend/Modules/candidate/candidate.events.js"></script>
+  <script src="../../backend/Controllers/candidate.js"></script>
+</body>
+</html>

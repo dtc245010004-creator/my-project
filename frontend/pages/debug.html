@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="vi">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Debug — JobPortalPlatform</title>
+	<style>
+		body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:16px;background:#f7f8fb;color:#111}
+		h1{margin:0 0 12px}
+		.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+		button{padding:8px 10px;border:1px solid #cbd5e1;background:#fff;border-radius:6px;cursor:pointer}
+		button.warn{background:#fff6f6;border-color:#f5c2c7}
+		textarea{width:100%;height:90px;margin-top:6px;padding:8px;border-radius:6px;border:1px solid #e2e8f0}
+		pre#output{background:#041029;color:#e6f0ff;padding:12px;border-radius:6px;min-height:160px;overflow:auto}
+		.panel{margin-bottom:12px}
+		label{font-size:13px;color:#374151}
+	</style>
+</head>
+<body>
+	<h1>Debug Console</h1>
+
+	<div class="panel">
+		<div class="row">
+			<button id="btn-local">Show localStorage</button>
+			<button id="btn-keys">List storage keys</button>
+			<button id="btn-admin">Show Admin state</button>
+			<button id="btn-auth">Show Auth users</button>
+			<button id="btn-persist">Call persistAll()</button>
+			<button id="btn-sync">Call syncUsersToAuthStore()</button>
+			<button id="btn-data-init">Run data-init()</button>
+			<button id="btn-export">Export storage</button>
+			<button id="btn-clear" class="warn">Clear localStorage</button>
+			<button id="btn-reload">Reload page</button>
+		</div>
+	</div>
+
+	<div class="panel">
+		<label for="js-code">Run arbitrary JS (expression or statement):</label>
+		<textarea id="js-code" placeholder="e.g. window.location.href or AdminModules.state.getState()"></textarea>
+		<div class="row"><button id="btn-run">Run</button></div>
+	</div>
+
+	<div class="panel">
+		<h2>Output</h2>
+		<pre id="output">Ready.</pre>
+	</div>
+
+	<script>
+		function isLocalDev(){
+			const h = (location.hostname||'').toLowerCase();
+			return h === 'localhost' || h === '127.0.0.1' || h === '::1' || h.includes('staging') || h.endsWith('.local');
+		}
+
+		function isAuthorized(){
+			try{
+				if(isLocalDev()) return true;
+				if(localStorage.DEBUG_ALLOW === '1') return true;
+				if(window.Auth && typeof Auth.getCurrentUser === 'function'){
+					const u = Auth.getCurrentUser();
+					if(u && (u.role === 'admin' || u.role === 'developer' || u.isDev)) return true;
+				}
+			}catch(e){ /* ignore */ }
+			return false;
+		}
+
+		function renderLockUI(){
+			document.body.innerHTML = '';
+			const wrap = document.createElement('div');
+			wrap.style.fontFamily = 'system-ui,Segoe UI,Roboto,Arial';
+			wrap.style.padding = '24px';
+			wrap.innerHTML = `
+				<h1>Debug — Restricted</h1>
+				<p>This debug console is restricted to development / staging environments and admin users.</p>
+				<p>To unlock locally, set <code>localStorage.DEBUG_ALLOW = '1'</code> in the browser console,
+				or provide a configured access key below.</p>
+				<div style="margin-top:12px"><input id="debug-key" placeholder="Enter access key" style="padding:8px;border-radius:6px;border:1px solid #ccc;width:280px;margin-right:8px" /><button id="debug-unlock">Unlock</button></div>
+				<p style="margin-top:12px;color:#444">If you are an admin user, sign in and retry. See README for debug instructions.</p>
+			`;
+			document.body.appendChild(wrap);
+			document.getElementById('debug-unlock').addEventListener('click', ()=>{
+				const v = document.getElementById('debug-key').value || '';
+				const expected = localStorage.DEBUG_KEY || 'debug-secret';
+				if(v === expected){ localStorage.DEBUG_ALLOW = '1'; location.reload(); }
+				else alert('Invalid access key');
+			});
+		}
+
+		if(!isAuthorized()){
+			renderLockUI();
+		} else {
+			(function(){
+				const outEl = document.getElementById('output');
+				function log(v){
+					try{ outEl.textContent = (typeof v === 'string')? v : JSON.stringify(v, null, 2); }
+					catch(e){ outEl.textContent = String(v); }
+				}
+
+				function safeParse(s){ try{ return JSON.parse(s); }catch(e){ return s; } }
+
+				document.getElementById('btn-local').addEventListener('click', ()=>{
+					try{
+						const dump = {};
+						for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); dump[k]=safeParse(localStorage.getItem(k)); }
+						log(dump);
+					}catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-keys').addEventListener('click', ()=>{
+					try{ const keys=[]; for(let i=0;i<localStorage.length;i++) keys.push(localStorage.key(i)); log(keys); }catch(e){log(e.toString())}
+				});
+
+				document.getElementById('btn-admin').addEventListener('click', ()=>{
+					try{
+						if(window.AdminState) return log(window.AdminState);
+						if(window.AdminModules && AdminModules.state && typeof AdminModules.state.getState === 'function') return log(AdminModules.state.getState());
+						log('AdminState / AdminModules.state not found');
+					}catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-auth').addEventListener('click', ()=>{
+					try{
+						if(window.Auth && typeof Auth.getUsers === 'function'){ return log(Auth.getUsers()); }
+						const u = localStorage.getItem('users') || localStorage.getItem('AUTH_USERS');
+						if(u) return log(safeParse(u));
+						log('Auth.getUsers and common keys not found');
+					}catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-persist').addEventListener('click', ()=>{
+					try{
+						if(typeof persistAll === 'function'){ persistAll(); return log('persistAll() called'); }
+						if(window.AdminModules && AdminModules.storage && typeof AdminModules.storage.persistAll === 'function'){ AdminModules.storage.persistAll(); return log('AdminModules.storage.persistAll() called'); }
+						log('persistAll not found');
+					}catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-sync').addEventListener('click', ()=>{
+					try{
+						if(typeof syncUsersToAuthStore === 'function'){ syncUsersToAuthStore(); return log('syncUsersToAuthStore() called'); }
+						if(window.AdminModules && AdminModules.users && typeof AdminModules.users.syncUsersToAuthStore === 'function'){ AdminModules.users.syncUsersToAuthStore(); return log('AdminModules.users.syncUsersToAuthStore() called'); }
+						log('syncUsersToAuthStore not found');
+					}catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-data-init').addEventListener('click', ()=>{
+					try{
+						if(typeof loadAllData === 'function'){ loadAllData(); return log('loadAllData() called'); }
+						if(typeof initData === 'function'){ initData(); return log('initData() called'); }
+						if(window.Data && typeof Data.init === 'function'){ Data.init(); return log('Data.init() called'); }
+						log('No data-init function found');
+					}catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-export').addEventListener('click', ()=>{
+					try{
+						const dump = {};
+						for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); dump[k]=safeParse(localStorage.getItem(k)); }
+						// open in new tab for quick view
+						const w = window.open('','_blank');
+						w.document.write('<pre>'+JSON.stringify(dump,null,2)+'</pre>');
+						// also trigger download as JSON file
+						const filename = 'jobportal-backup-'+(new Date()).toISOString().replace(/[:.]/g,'-')+'.json';
+						const blob = new Blob([JSON.stringify(dump,null,2)], {type:'application/json'});
+						const a = document.createElement('a');
+						a.href = URL.createObjectURL(blob);
+						a.download = filename;
+						document.body.appendChild(a);
+						a.click();
+						a.remove();
+						log('Export opened and download triggered: '+filename);
+					}catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-clear').addEventListener('click', ()=>{
+					if(!confirm('Clear entire localStorage? This cannot be undone.')) return;
+					try{ localStorage.clear(); log('localStorage cleared'); }catch(e){ log(e.toString()); }
+				});
+
+				document.getElementById('btn-reload').addEventListener('click', ()=>location.reload());
+
+				document.getElementById('btn-run').addEventListener('click', ()=>{
+					const code = document.getElementById('js-code').value || '';
+					try{
+						let res = eval(code);
+						if(res instanceof Promise){ res.then(r=>log(r)).catch(e=>log(e.toString())); }
+						else log(res);
+					}catch(e){ log(e.toString()); }
+				});
+			})();
+		}
+	</script>
+</body>
+</html>

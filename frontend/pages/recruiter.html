@@ -1,0 +1,581 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recruiter Dashboard - Job Portal Platform</title>
+  <link rel="icon" type="image/jpeg" href="../assets/images/logo1.jpg">
+    <link rel="stylesheet" href="../css/recruiter.css" />
+</head>
+<body>
+  <div class="dashboard">
+    <!-- ============================================
+         Sidebar Navigation
+    ============================================ -->
+    <aside class="sidebar">
+      <div class="brand"><img src="../assets/images/logo1.jpg" alt="Job Portal logo"><span>Job Portal Platform</span></div>
+
+      <div class="company-block">
+        <div class="company-logo">TC</div>
+        <div>
+          <div class="company-name">Tech Corp Recruitment</div>
+          <div class="company-sub">Recruiter Workspace</div>
+        </div>
+      </div>
+
+      <ul class="menu">
+        <li><a href="#" class="active" data-view="overview"><i class="fa-solid fa-chart-line"></i><span>Tổng quan</span></a></li>
+        <li><a href="#" data-view="jobs"><i class="fa-solid fa-briefcase"></i><span>Quản lý tin tuyển dụng</span></a></li>
+        <li><a href="#" data-view="applicants"><i class="fa-solid fa-users"></i><span>Quản lý hồ sơ ứng viên</span></a></li>
+        <li><a href="#" data-view="interviews"><i class="fa-regular fa-calendar-check"></i><span>Lịch hẹn phỏng vấn</span></a></li>
+        <li><a href="#" data-view="policy"><i class="fa-solid fa-file-invoice-dollar"></i><span>Chính sách phí</span></a></li>
+        <li><a href="#" data-view="settings"><i class="fa-solid fa-gear"></i><span>Cài đặt tài khoản</span></a></li>
+      </ul>
+    </aside>
+
+    <!-- ============================================
+         Main Content
+    ============================================ -->
+    <main class="main">
+      <!-- Header -->
+      <section class="topbar">
+        <div>
+          <h1>Tech Corp Dashboard</h1>
+          <p>Quản lý tin tuyển dụng, hồ sơ ứng viên và lịch phỏng vấn trong cùng một màn hình.</p>
+          <div id="topSearchWrap" class="top-search">
+            <input id="topSearchInput" type="text" placeholder="Tìm theo tên tin, tên ứng viên, email..." />
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button id="btnOpenWallet" class="btn btn-post" type="button"><i class="fa-solid fa-wallet"></i> Nạp tiền</button>
+          <button id="btnOpenCreate" class="btn btn-post" type="button"><i class="fa-solid fa-plus"></i> Đăng Job mới</button>
+          <button id="btnLogout" class="btn btn-logout" type="button"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
+        </div>
+      </section>
+
+      <!-- Stats -->
+      <section class="stats-row">
+        <article class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-bullhorn"></i></div>
+          <div>
+            <div class="stat-title">Jobs đang đăng</div>
+            <div id="statOpenPosts" class="stat-value">0</div>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-file-lines"></i></div>
+          <div>
+            <div class="stat-title">Tổng hồ sơ nhận được</div>
+            <div id="statTotalApplicants" class="stat-value">0</div>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-icon"><i class="fa-regular fa-eye"></i></div>
+          <div>
+            <div class="stat-title">Hồ sơ mới chưa xem</div>
+            <div id="statUnread" class="stat-value">0</div>
+          </div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-icon"><i class="fa-regular fa-calendar"></i></div>
+          <div>
+            <div class="stat-title">Lịch phỏng vấn hôm nay</div>
+            <div id="statInterviewToday" class="stat-value">0</div>
+          </div>
+        </article>
+      </section>
+
+      <!-- Core -->
+      <section id="jobsSection" class="core-grid">
+        <!-- ============================================
+             UC-3.2.1 Quan ly tin tuyen dung (Table)
+        ============================================ -->
+        <article class="panel">
+          <h2>Quản lý tin tuyển dụng</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tên tin</th>
+                  <th>Ngày đăng</th>
+                  <th>Số lượng hồ sơ</th>
+                  <th>Lượt xem</th>
+                  <th>Trạng thái</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="jobTableBody"></tbody>
+            </table>
+          </div>
+
+        </article>
+
+        <!-- ============================================
+             Recent activities + trend
+        ============================================ -->
+        <article class="panel">
+          <h2>Ứng viên nộp gần đây</h2>
+          <ul id="recentActivityList" class="activity-list"></ul>
+
+          <div class="trend">
+            <h3>Xu hướng ứng tuyển trong tuần</h3>
+            <div id="trendBars" class="bars"></div>
+          </div>
+        </article>
+      </section>
+
+      <section id="applicantsSection" class="applicants-section">
+        <article class="panel">
+          <h2>Quản lý hồ sơ ứng viên</h2>
+          <section id="applicantPanel" class="applicant-panel" style="display:block; margin-top:0;">
+            <div class="applicant-head">
+              <div id="applicantTitle" class="applicant-title">Danh sách ứng viên</div>
+              <div class="applicant-controls">
+                <select id="applicantJobSelect" class="applicant-job-select"></select>
+                <select id="applicantStatusFilter" class="applicant-job-select">
+                  <option value="all">Tất cả trạng thái</option>
+                  <option value="pending">Chờ duyệt</option>
+                  <option value="approved">Đã duyệt</option>
+                  <option value="moi phong van">Mới phỏng vấn</option>
+                </select>
+                <select id="applicantTimeFilter" class="applicant-job-select">
+                  <option value="all">Tất cả thời gian</option>
+                  <option value="today">Hôm nay</option>
+                  <option value="7d">7 ngày</option>
+                  <option value="30d">30 ngày</option>
+                </select>
+                <div class="search-box">
+                  <input id="applicantSearch" type="text" placeholder="Tim ten, email, ky nang, CV..." />
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+              </div>
+            </div>
+
+            <div id="applicantList" class="applicant-list"></div>
+          </section>
+        </article>
+      </section>
+
+      <section id="interviewsSection" class="applicants-section">
+        <article class="panel">
+          <h2>Lịch hẹn phỏng vấn</h2>
+          <section class="applicant-panel" style="display:block; margin-top:0;">
+            <div class="applicant-head">
+              <div class="applicant-title">Danh sách lịch phỏng vấn</div>
+              <div class="applicant-controls">
+                <select id="interviewJobFilter" class="applicant-job-select">
+                  <option value="all">Tất cả tin đăng</option>
+                </select>
+                <select id="interviewStatusFilter" class="applicant-job-select">
+                  <option value="all">Tất cả trạng thái</option>
+                  <option value="scheduled">Đã hẹn</option>
+                  <option value="done">Đã xong</option>
+                  <option value="canceled">Đã hủy</option>
+                </select>
+                <select id="interviewDateFilter" class="applicant-job-select">
+                  <option value="all">Tất cả thời gian</option>
+                  <option value="today">Hôm nay</option>
+                  <option value="7d">7 ngày</option>
+                  <option value="30d">30 ngày</option>
+                </select>
+                <div class="search-box">
+                  <input id="interviewSearch" type="text" placeholder="Tìm ứng viên, vị trí, địa điểm..." />
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+              </div>
+            </div>
+
+            <div id="interviewList" class="applicant-list"></div>
+          </section>
+        </article>
+      </section>
+
+      <section id="policySection" class="applicants-section">
+        <article class="panel">
+          <h2>Chính sách phí tuyển dụng</h2>
+          <div class="settings-note" style="margin-bottom:10px;">
+            Phí được áp dụng theo 2 phần: phí ghim tin và phí hoa hồng theo số lượng hồ sơ đã được recruiter duyệt.
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
+            <div style="border:1px solid #dbeafe;border-radius:10px;background:#eff6ff;padding:10px;">
+              <div style="font-size:12px;color:#1e40af;font-weight:700;">Phí ghim 1 tin</div>
+              <div id="policyFeaturedFee" style="font-size:22px;font-weight:800;color:#1d4ed8;line-height:1.1;">0đ</div>
+            </div>
+            <div style="border:1px solid #dcfce7;border-radius:10px;background:#f0fdf4;padding:10px;">
+              <div style="font-size:12px;color:#166534;font-weight:700;">Hoa hồng mỗi hồ sơ duyệt</div>
+              <div id="policyCommissionPerApproved" style="font-size:22px;font-weight:800;color:#15803d;line-height:1.1;">0đ</div>
+            </div>
+            <div style="border:1px solid #fce7f3;border-radius:10px;background:#fdf2f8;padding:10px;">
+              <div style="font-size:12px;color:#9d174d;font-weight:700;">Số hồ sơ đã duyệt</div>
+              <div id="policyApprovedCount" style="font-size:22px;font-weight:800;color:#be185d;line-height:1.1;">0</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px;">
+            <div style="border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px;">
+              <div style="font-size:12px;color:#475569;font-weight:700;">Tổng hoa hồng ước tính (đã duyệt)</div>
+              <div id="policyEstimatedCommission" style="font-size:20px;font-weight:800;color:#0f172a;line-height:1.1;">0đ</div>
+            </div>
+            <div style="border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px;">
+              <div style="font-size:12px;color:#475569;font-weight:700;">Tổng phí ghim ước tính</div>
+              <div id="policyEstimatedFeatured" style="font-size:20px;font-weight:800;color:#0f172a;line-height:1.1;">0đ</div>
+            </div>
+          </div>
+
+          <div style="border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px;margin-top:10px;">
+            <div style="font-size:12px;color:#475569;font-weight:700;margin-bottom:8px;">Tổng chi phí dự kiến</div>
+            <div id="policyEstimatedTotal" style="font-size:24px;font-weight:800;color:#111827;line-height:1.1;">0đ</div>
+          </div>
+
+          <div class="field" style="margin-top:10px;">
+            <label>Theo từng tin tuyển dụng</label>
+            <div id="policyByJobList" style="border:1px solid #e5e7eb;border-radius:10px;background:#fff;max-height:220px;overflow:auto;padding:8px;display:grid;gap:6px;color:#475569;font-size:12px;"></div>
+          </div>
+
+          <div style="border-top:1px dashed #dbe3f2;margin-top:14px;padding-top:14px;display:grid;gap:10px;">
+            <div class="settings-note" style="background:#fefce8;border-color:#fde68a;color:#854d0e;">Gửi liên hệ cho admin nếu bạn cần hỗ trợ thanh toán, xử lý tin đăng hoặc phản ánh sự cố hệ thống.</div>
+            <div class="field">
+              <label for="recruiterContactTitle">Tiêu đề liên hệ</label>
+              <input id="recruiterContactTitle" type="text" placeholder="Ví dụ: Cần hỗ trợ duyệt nạp tiền" />
+            </div>
+            <div class="field">
+              <label for="recruiterContactContent">Nội dung</label>
+              <textarea id="recruiterContactContent" placeholder="Mô tả chi tiết vấn đề bạn cần admin xử lý..."></textarea>
+            </div>
+            <button id="recruiterContactSend" class="btn btn-save" type="button" style="justify-self:start;">Gửi liên hệ</button>
+          </div>
+        </article>
+      </section>
+
+      <section id="settingsSection" class="applicants-section">
+        <article class="panel">
+          <h2>Cài đặt tài khoản</h2>
+          <div class="settings-note" style="margin-bottom:10px;">
+            Quản lý thông tin recruiter và thao tác nhanh với ví, hồ sơ tài khoản ngay trong khu vực chức năng này.
+          </div>
+
+          <div class="settings-grid">
+            <div class="settings-tile">
+              <div class="settings-tile-label">Họ và tên</div>
+              <div id="settingsDisplayName" class="settings-tile-value">-</div>
+            </div>
+            <div class="settings-tile">
+              <div class="settings-tile-label">Công ty</div>
+              <div id="settingsDisplayCompany" class="settings-tile-value">-</div>
+            </div>
+            <div class="settings-tile">
+              <div class="settings-tile-label">Email đăng nhập</div>
+              <div id="settingsDisplayEmail" class="settings-tile-value">-</div>
+            </div>
+            <div class="settings-tile">
+              <div class="settings-tile-label">Số điện thoại</div>
+              <div id="settingsDisplayPhone" class="settings-tile-value">-</div>
+            </div>
+          </div>
+
+          <div class="settings-actions">
+            <button id="btnOpenAccountSettingsInline" class="btn btn-save" type="button"><i class="fa-solid fa-user-gear"></i> Chỉnh sửa thông tin</button>
+            <button id="btnOpenWalletInline" class="btn btn-post" type="button"><i class="fa-solid fa-wallet"></i> Mở ví / nạp tiền</button>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <!-- ============================================
+       Modal: Dang tin moi
+  ============================================ -->
+  <div id="createModalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="createModalTitle">
+      <div class="modal-head">
+        <h3 id="createModalTitle">Đăng tin tuyển dụng mới</h3>
+        <button id="createModalClose" class="modal-close" type="button">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="field">
+          <label for="newJobTitle">Tiêu đề tin</label>
+          <input id="newJobTitle" type="text" placeholder="Ví dụ: Lập trình viên Frontend Senior" />
+        </div>
+
+        <div class="field">
+          <label for="newJobSalary">Mức lương</label>
+          <input id="newJobSalary" type="text" placeholder="Ví dụ: 15 - 25 triệu VND hoặc thỏa thuận" />
+        </div>
+
+        <div class="field">
+          <label for="newJobDescription">Mô tả công việc</label>
+          <textarea id="newJobDescription" placeholder="Mô tả vai trò, kỹ năng và yêu cầu ứng viên..."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="newJobType">Hình thức làm việc</label>
+          <select id="newJobType">
+            <option value="fulltime">Toàn thời gian</option>
+            <option value="parttime">Bán thời gian</option>
+            <option value="remote">Remote</option>
+            <option value="hybrid">Hybrid</option>
+            <option value="intern">Thực tập</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="newJobLocation">Địa điểm</label>
+          <input id="newJobLocation" type="text" placeholder="Ví dụ: Hà Nội / TP.HCM / Remote" />
+        </div>
+
+        <div class="field">
+          <label for="newJobRequirements">Yêu cầu</label>
+          <textarea id="newJobRequirements" placeholder="Ví dụ: 2+ năm kinh nghiệm, React, giao tiếp tốt..."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="newJobMaxApplicants">Số lượng hồ sơ nhận tối đa</label>
+          <input id="newJobMaxApplicants" type="number" min="1" step="1" placeholder="Ví dụ: 50 (để trống = không giới hạn)" />
+        </div>
+
+        <div class="field">
+          <label style="display:flex;align-items:center;gap:8px;">
+            <input id="newJobFeatured" type="checkbox" />
+            <span>Ghim/Nổi bật tin đăng (+20.000đ)</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="createModalCancel" class="btn-cancel" type="button">Hủy</button>
+        <button id="createModalSave" class="btn-save" type="button">Lưu tin</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       Modal: Gui loi moi phong van
+  ============================================ -->
+  <div id="inviteModalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="inviteModalTitle">
+      <div class="modal-head">
+        <h3 id="inviteModalTitle">Gửi lời mời phỏng vấn</h3>
+        <button id="inviteModalClose" class="modal-close" type="button">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="field">
+          <label for="inviteCandidate">Ứng viên</label>
+          <input id="inviteCandidate" type="text" readonly />
+        </div>
+
+        <div class="field">
+          <label for="inviteJob">Vị trí</label>
+          <input id="inviteJob" type="text" readonly />
+        </div>
+
+        <div class="field">
+          <label for="inviteDateTime">Thời gian phỏng vấn</label>
+          <input id="inviteDateTime" type="datetime-local" />
+        </div>
+
+        <div class="field">
+          <label for="inviteMessage">Ghi chú</label>
+          <textarea id="inviteMessage" placeholder="Nội dung nhắn gửi ứng viên..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="inviteModalCancel" class="btn-cancel" type="button">Hủy</button>
+        <button id="inviteModalSend" class="btn-save" type="button">Gửi lời mời</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="accountSettingsBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="accountSettingsTitle">
+      <div class="modal-head">
+        <h3 id="accountSettingsTitle">Cài đặt tài khoản</h3>
+        <button id="accountSettingsClose" class="modal-close" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="settings-note">
+          Cập nhật hồ sơ recruiter của bạn, bao gồm tên, công ty, email, số điện thoại và mật khẩu. Thay đổi sẽ được lưu ngay vào tài khoản đang đăng nhập.
+        </div>
+
+        <div class="field">
+          <label for="accountName">Họ và tên</label>
+          <input id="accountName" type="text" placeholder="Nhập họ và tên" />
+        </div>
+
+        <div class="field">
+          <label for="accountCompany">Công ty</label>
+          <input id="accountCompany" type="text" placeholder="Nhập tên công ty" />
+        </div>
+
+        <div class="field">
+          <label for="accountEmail">Email đăng nhập</label>
+          <input id="accountEmail" type="email" placeholder="name@company.com" />
+        </div>
+
+        <div class="field">
+          <label for="accountPhone">Số điện thoại</label>
+          <input id="accountPhone" type="tel" placeholder="Nhập số điện thoại" />
+        </div>
+
+        <div class="field">
+          <label for="accountCurrentPassword">Mật khẩu hiện tại</label>
+          <input id="accountCurrentPassword" type="password" placeholder="Nhập mật khẩu hiện tại" />
+        </div>
+
+        <div class="field">
+          <label for="accountNewPassword">Mật khẩu mới</label>
+          <input id="accountNewPassword" type="password" placeholder="Để trống nếu không đổi mật khẩu" />
+        </div>
+
+        <div class="field">
+          <label for="accountConfirmPassword">Xác nhận mật khẩu mới</label>
+          <input id="accountConfirmPassword" type="password" placeholder="Nhập lại mật khẩu mới" />
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="accountSettingsCancel" class="btn-cancel" type="button">Hủy</button>
+        <button id="accountSettingsSave" class="btn-save" type="button">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="walletModalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="walletModalTitle">
+      <div class="modal-head">
+        <h3 id="walletModalTitle">Thanh toán / Ví</h3>
+        <button id="walletModalClose" class="modal-close" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div id="walletStep1" class="wallet-step">
+          <div class="wallet-balance-card">
+            <small>Số dư hiện tại</small>
+            <strong id="walletBalanceText">0đ</strong>
+          </div>
+
+          <div class="field" style="margin-top:2px;">
+            <label for="depositAmount">Số tiền cần nạp</label>
+            <input id="depositAmount" type="text" inputmode="numeric" autocomplete="off" placeholder="Nhập số tiền (VD: 20.000đ)" />
+          </div>
+
+          <div class="settings-note" style="background:#ecfeff;border-color:#a5f3fc;color:#0f766e;">
+            Nội dung chuyển khoản sẽ được tạo tự động sau khi bấm Tạo mã thanh toán.
+          </div>
+
+          <button id="btnGenerateQr" class="wallet-primary-btn" type="button">Tạo mã thanh toán</button>
+        </div>
+
+        <div id="walletStep2" class="wallet-step hidden">
+          <div class="wallet-transfer-shell">
+            <div class="wallet-transfer-col">
+              <h4>Thông Tin Chuyển Khoản:</h4>
+
+              <div class="wallet-transfer-item">
+                <span>Ngân hàng:</span>
+                <strong id="qrBankValue">MB Bank</strong>
+              </div>
+
+              <div class="wallet-transfer-item">
+                <span>Tên TK:</span>
+                <strong id="qrAccountNameValue">Ngo Quang Tung</strong>
+              </div>
+
+              <div class="wallet-transfer-item">
+                <span>Số TK:</span>
+                <strong id="qrAccountNoValue">0346263706</strong>
+              </div>
+
+              <div class="wallet-transfer-item">
+                <span>Số Tiền Nạp:</span>
+                <strong id="qrAmountValue">0đ</strong>
+              </div>
+
+              <div class="wallet-transfer-item">
+                <span>Nội Dung Chuyển Khoản:</span>
+                <strong id="qrNoteValue">NAP VI</strong>
+              </div>
+            </div>
+
+            <div class="wallet-transfer-col">
+              <h4>Quét Nhanh Mã QR</h4>
+
+              <div class="wallet-qr-shell wallet-qr-shell-dark">
+                <img id="walletQrImage" src="" alt="QR thanh toán" style="width:220px;height:220px;border:2px solid #d1fae5;border-radius:2px;object-fit:cover;background:#f8fafc;" />
+
+                <div class="wallet-timer-box">
+                  <span>Thời Gian Hết Hạn:</span>
+                  <strong id="walletQrTimer">00:10:00</strong>
+                </div>
+              </div>
+              <div id="walletQrText" style="font-size:12px;color:#86efac;line-height:1.4;">Quét mã để mở app ngân hàng với nội dung chuyển khoản đã điền sẵn.</div>
+            </div>
+          </div>
+
+          <div class="wallet-instruction-list">
+            <p>Các Bạn Vui Lòng Ghi Đúng Nội Dung Chuyển Khoản.</p>
+            <p>Sau khi Chuyển Khoản Xong Hệ Thống Sẽ Tự Động Kiểm Tra Cập Nhật Số Dư Vào Tài Khoản.</p>
+            <p>Sau 10 Phút Nếu Không Thấy Cập Nhật Vui Lòng Chụp Bill Chuyển Khoản Và Gửi Cho ADMIN.</p>
+          </div>
+
+          <button id="btnCreateDeposit" class="wallet-primary-btn" type="button">Xác nhận đã chuyển khoản</button>
+        </div>
+
+        <div id="walletHistorySection" class="field" style="margin-top:4px;">
+          <label>Lịch sử giao dịch gần đây</label>
+          <div id="walletHistoryList" style="border:1px solid #e5e7eb;border-radius:10px;background:#fff;max-height:160px;overflow:auto;padding:8px;display:grid;gap:6px;color:#475569;font-size:12px;"></div>
+        </div>
+      </div>
+
+      <div id="walletFooterActions" class="modal-actions">
+        <button id="walletModalCancel" class="btn-cancel" type="button">Hủy</button>
+        <button id="walletModalSave" class="btn-save" type="button">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="support-widget" id="supportWidget">
+    <div class="support-list" id="supportList">
+      <div class="support-item">
+        <a class="support-label support-label--teal" href="https://t.me" target="_blank" rel="noopener noreferrer">Kênh Telegram</a>
+        <a class="support-icon support-icon--teal" href="https://t.me" target="_blank" rel="noopener noreferrer" aria-label="Telegram">&#128276;</a>
+      </div>
+      <div class="support-item">
+        <a class="support-label support-label--blue" href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">Facebook Page</a>
+        <a class="support-icon support-icon--blue" href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>
+      </div>
+      <div class="support-item">
+        <a class="support-label support-label--indigo" href="https://m.me" target="_blank" rel="noopener noreferrer">Chat Messenger</a>
+        <a class="support-icon support-icon--indigo" href="https://m.me" target="_blank" rel="noopener noreferrer" aria-label="Messenger">&#9993;</a>
+      </div>
+    </div>
+    <button class="support-toggle" id="supportToggle" type="button" aria-expanded="false" aria-controls="supportList" aria-label="Bật tắt hỗ trợ">
+      <span class="support-fab-label">Hỗ trợ</span>
+      <span class="support-open"><img class="support-avatar" src="../assets/images/soi-co-doc-xe-ao-meme-1.webp" alt="Avatar hỗ trợ"></span>
+      <span class="support-close">&#10005;</span>
+    </button>
+  </div>
+
+    <script src="./recruiter.js"></script>
+
+  <script src="../../backend/Data/data-init.js"></script>
+  <script src="../../backend/Controllers/auth.js"></script>
+  <script src="../../backend/Controllers/job.js"></script>
+  <script src="../../backend/Modules/recruiter/recruiter.core.js"></script>
+  <script src="../../backend/Modules/recruiter/recruiter.dashboard.js"></script>
+  <script src="../../backend/Modules/recruiter/recruiter.profile.js"></script>
+  <script src="../../backend/Modules/recruiter/recruiter.wallet.js"></script>
+  <script src="../../backend/Modules/recruiter/recruiter.events.js"></script>
+  <script src="../../backend/Modules/recruiter/view-cv.js"></script>
+  <script src="../../backend/Controllers/recruiter.js"></script>
+</body>
+</html>
+
